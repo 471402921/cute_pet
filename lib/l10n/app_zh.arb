@@ -1,0 +1,17 @@
+{
+  "@@locale": "zh",
+  "appTitle": "Cute Pet",
+  "homeGreeting": "你好,可爱的小宠物!",
+  "homeCheer": "鼓励一下",
+  "homeMeetThePet": "去看宠物",
+  "petTitle": "宠物",
+  "petActionIdle": "发呆",
+  "petActionEat": "吃饭",
+  "petActionDrink": "喝水",
+  "petActionWalk": "散步",
+  "petActionRun": "奔跑",
+  "petActionSleep": "睡觉",
+  "commonRetry": "重试",
+  "commonEmpty": "什么都没有",
+  "commonLoading": "加载中"
+}

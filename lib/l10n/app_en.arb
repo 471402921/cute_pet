@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "appTitle": "Cute Pet",
+  "homeGreeting": "Hello, cute pet!",
+  "homeCheer": "Cheer",
+  "homeMeetThePet": "Meet the pet",
+  "petTitle": "Pet",
+  "petActionIdle": "Idle",
+  "petActionEat": "Eat",
+  "petActionDrink": "Drink",
+  "petActionWalk": "Walk",
+  "petActionRun": "Run",
+  "petActionSleep": "Sleep",
+  "commonRetry": "Retry",
+  "commonEmpty": "Nothing here",
+  "commonLoading": "Loading"
+}

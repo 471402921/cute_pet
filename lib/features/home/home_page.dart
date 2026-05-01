@@ -1,33 +1,32 @@
+import 'package:cute_pet/app/app_routes.dart';
+import 'package:cute_pet/features/pet/pet_route_args.dart';
+import 'package:cute_pet/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../app/app_routes.dart';
-import 'home_controller.dart';
-
-class HomePage extends GetView<HomeController> {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Cute Pet')),
+      appBar: AppBar(title: Text(l10n.appTitle)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Obx(() => Text(
-                  controller.greeting.value,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                )),
+            Text(
+              l10n.homeGreeting,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: controller.cheer,
-              child: const Text('Cheer'),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: () => Get.toNamed(AppRoutes.pet),
-              child: const Text('Meet the pet'),
+              onPressed: () => Get.toNamed<void>(
+                AppRoutes.pet,
+                arguments: const PetRouteArgs(),
+              ),
+              child: Text(l10n.homeMeetThePet),
             ),
           ],
         ),
