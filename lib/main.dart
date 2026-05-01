@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'app/app_binding.dart';
 import 'app/app_pages.dart';
 import 'app/app_routes.dart';
+import 'app/app_theme.dart';
 
 void main() {
   runApp(const CutePetApp());
@@ -15,10 +17,9 @@ class CutePetApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Cute Pet',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      initialBinding: AppBinding(),
       initialRoute: AppRoutes.home,
       getPages: AppPages.routes,
     );
