@@ -184,6 +184,8 @@ decisions:
     title: GameClock 作为 core 单例,禁止 controller 自起 Timer
   - id: ADR-008
     title: 存档套 SaveEnvelope + 版本化 migrator
+  - id: ADR-009
+    title: Spec-driven 强门禁 (PRD → TechPack → 代码),前端轻量版
 
 # ---- 未实现的 P0 conventions ----
 # 这些是 conventions 已规定、但代码还没落地的能力。开新模块需要它们时,

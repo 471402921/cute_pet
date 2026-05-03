@@ -27,6 +27,20 @@ description: >
 2. [doc/architecture.md](../../../doc/architecture.md) — 完整架构契约
 3. [doc/conventions.md](../../../doc/conventions.md) — 11 节标准
 
+## Step 0 — Spec 软门禁(不强制,但有的话用)
+
+review 不强制要求 PRD/TechPack 存在,但**如果存在,必须读出来做对照**——审核不只是看代码符不符合 lint/architecture,更要看实现有没有偏离 spec。
+
+1. 询问/检测:
+   - `doc/prd/{NN}-{module}.md` 存在? 状态? 取 §3 范围 + §7 验收标准
+   - `doc/design/{NN}-{module}.md` 存在? 状态? 取 §2 文件清单 + §6 关键取舍
+2. 若 spec 存在:在审核报告里加一节 **"D. spec 一致性"**:
+   - PRD §3 MUST 项是否都有对应 controller 方法/page widget?
+   - PRD §7 AC 项是否都有对应测试覆盖?
+   - TechPack §2 文件清单 vs 实际 lib/features/{module}/ 是否一致?(漂移要列出来)
+   - TechPack §6 关键取舍是否在代码注释里有体现?(不强求,但加分项)
+3. 若 spec 不存在:报告顶部加一行提醒:"**无 PRD/TechPack 对照**,本次只能审架构/可读性/未来摩擦,无法判断实现是否偏离需求"
+
 ## 工作流程
 
 ### Step 1 — 确定范围

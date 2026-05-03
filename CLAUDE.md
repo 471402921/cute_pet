@@ -84,12 +84,23 @@ features/{module}/
 
 cute_pixel 用的 skills 命名为 `cute-pixel-*` 一族(对应"像素风 app 通用底座",可在 fork 出去的下一个像素 app 复用):
 
-| Skill | 触发词 | 用途 |
-|---|---|---|
-| `/cute-pixel-status` | "现在项目什么状态" / "先看一眼" | 读 [lib/_manifest.yaml](lib/_manifest.yaml) 回答模块/服务/测试当前状态(只读) |
-| `/cute-pixel-module-gen` | "新建模块 X" / "起个 X feature" | `cp -r lib/features/_template/` + sed,跑 codegen+analyze+test 验证 |
-| `/cute-pixel-review` | "review features/X" / "审一下" | 按 4 条铁律 + 12 条 conventions + ADR 扫违规(只报告) |
-| `/cute-pixel-test-gen` | "给 X 写测试" / "补测试" | 按 conventions §7 四层金字塔补测试 |
+**Spec → 代码 流水线**(每步都有强门禁,见 [ADR-009](doc/decisions/ADR-009-spec-driven-with-strong-gates.md)):
+
+```
+/cute-pixel-doc-prd → /cute-pixel-doc-techpack → /cute-pixel-module-gen → /cute-pixel-test-gen
+   (prd/_TEMPLATE)       (design/_TEMPLATE)        (cp _template/+sed)      (按 PRD §7 AC 写)
+```
+
+| Skill | 门禁 | 触发词 | 用途 |
+|---|---|---|---|
+| `/cute-pixel-status` | 无 | "现在项目什么状态" | 读 [_manifest.yaml](lib/_manifest.yaml) 回答模块/服务/测试当前状态(只读) |
+| `/cute-pixel-doc-prd` | 无 | "写 PRD" / "新建 PRD <模块>" | 按 [doc/prd/_TEMPLATE.md](doc/prd/_TEMPLATE.md) 8 节生成 PRD-Lite(含 Figma 链接槽) |
+| `/cute-pixel-doc-techpack` | **PRD 必须定稿** | "写 TechPack" / "出技术方案" | 按 [doc/design/_TEMPLATE.md](doc/design/_TEMPLATE.md) 6 节生成 TechPack |
+| `/cute-pixel-module-gen` | **PRD + TechPack 都定稿** | "新建模块 X" / "起个 X feature" | `cp -r lib/features/_template/` + sed,跑 codegen+analyze+test |
+| `/cute-pixel-test-gen` | **PRD §7 AC 必须定稿** | "给 X 写测试" | 按 conventions §7 四层金字塔 + AC 对照写测试 |
+| `/cute-pixel-review` | 软(有 spec 则做对照) | "review features/X" | 4 条铁律 + 12 条 conventions + spec 一致性扫违规(只报告) |
+
+**例外**:`skip-spec: <原因>` 可越门禁(prototype/throwaway 用),原因会写进生成代码的 binding 注释做 audit trail。
 
 每个 skill 内部都**运行时读 architecture.md / conventions.md / 本文件**,不抄规范。规范变了改文档就够,skill 不动。
 

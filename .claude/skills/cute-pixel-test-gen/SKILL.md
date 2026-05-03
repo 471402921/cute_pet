@@ -19,6 +19,20 @@ description: >
 1. [doc/conventions.md](../../../doc/conventions.md) §7 — 三层金字塔 + 覆盖率指标 + mocktail 模板
 2. [references/test-templates.md](references/test-templates.md) — 各层测什么、为什么、示意片段
 
+## Step 0 — Spec 门禁(强制,不可跳过)
+
+写测试**必须有验收标准对照**,否则就是凑覆盖率(测试腐烂前兆):
+
+1. 询问/检测 PRD 路径:`doc/prd/{NN}-{module}.md`
+2. 检查文末 `**状态**:`:
+   - `已定稿` → 通过门禁,**读取 §7 验收标准**作为测试场景的 ground truth
+   - `草稿`/`评审中`/不存在 → **拒绝生成测试**,引导:
+     - "测试要对验收标准而非实现细节,先把 PRD §7 验收标准定下来再来。调用 `/cute-pixel-doc-prd {module}`"
+3. **TechPack 是软门禁**:存在则读 §5 测试要点(覆盖率目标 + 必测项);不存在不阻塞但提醒
+4. **例外**:`skip-spec: <原因>` 同样接受(如临时 prototype 测试),把 reason 写进对应 test 文件顶部 `// ⚠️ skip-spec: <reason>`
+
+通过门禁后,把**每条 AC-xx → 至少 1 个 test case** 当作生成原则,不要盲生成 happy-path 凑数。
+
 ## 工作流程
 
 ### Step 1 — 扫模块文件

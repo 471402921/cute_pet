@@ -22,11 +22,29 @@ description: >
 3. [doc/pixel-foundation.md](../../../doc/pixel-foundation.md) — Flame 集成契约(仅 Flame 模块需要)
 4. [doc/conventions.md](../../../doc/conventions.md) — 11 节标准,着重 §1 错误、§4 i18n、§7 测试、§8 路由参数、§9 ViewState、§10 freezed、§11 跨模块通信、§12 时间与存档
 
+## Step 0 — Spec 门禁(强制,不可跳过)
+
+模块生成前**必须先核对 PRD + TechPack**:
+
+1. 询问/检测两个文件:
+   - PRD 路径:`doc/prd/{NN}-{module}.md`
+   - TechPack 路径:`doc/design/{NN}-{module}.md`
+2. 各打开看文末 `**状态**:`:
+   - 都 `已定稿` → 通过门禁,继续
+   - 任一为 `草稿`/`评审中` 或文件不存在 → **拒绝生成代码**,引导用户:
+     - 缺 PRD → `/cute-pixel-doc-prd {module}`
+     - 缺 TechPack → `/cute-pixel-doc-techpack {module}`
+     - 都没定稿 → 先确认 spec 再来
+3. **例外路径**:用户显式说 `skip-spec: <原因>`(如 prototype/学习/throwaway demo),允许通过,但:
+   - 把 reason 写进生成模块的 `{module}_binding.dart` 顶部注释:`// ⚠️ skip-spec: <reason> — generated without PRD/TechPack, audit trail`
+   - 报告里高亮提醒用户后续要补 spec
+4. 通过门禁后,**读 PRD §3 范围 + §7 验收标准、TechPack §2 文件清单 + §3 状态形状**,把这些当本次生成的 ground truth(优先级高于用户对话里的临时描述)
+
 ## 工作流程
 
-### Step 1 — 收集输入
+### Step 1 — 收集输入(Spec 已通过门禁,补足模板需要的细节)
 
-跟用户确认这些,**不清楚就停下问**:
+跟用户确认这些(若 TechPack 已写明则跳过对应项),**不清楚就停下问**:
 
 - **模块名**(snake_case,不与已有 `lib/features/*` 冲突;不能是 `_template` 自己)
 - **PascalCase 名**(用于类名,默认从 snake_case 推导:`pet_profile` → `PetProfile`)

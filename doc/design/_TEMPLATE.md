@@ -1,126 +1,104 @@
-# Tech Pack 模板
+# Tech Pack 模板(前端 / Module-First Flat)
 
-> 复制本文件到 `design/{NN}-{module}.md` 后填写。**前置条件**:对应 PRD-Lite 已定稿。
+> 复制本文件到 `design/{NN}-{module}.md` 后填写。**前置条件**:对应 PRD-Lite 已**定稿**(状态 = 已定稿)。
+
+> 本模板对齐 [architecture.md](../architecture.md) 的 Module-First Flat + [pixel-foundation.md](../pixel-foundation.md) 的 Flame 契约。前端 TechPack **不写**后端字段表/SQL/API 设计——那些归后端 TechPack。
 
 ---
 
 ## 1. 关联 PRD
 
-`../prd/{NN}-{module}.md`(链上)
+- **PRD 路径**:`../prd/{NN}-{module}.md`
+- **PRD 版本**:`v0.1`
+- **状态匹配**:本 TechPack 草稿对应 PRD 哪一稿(PRD 改了要回过来更新本节)
 
-## 2. 模块定位
+---
 
-- **属于哪个 feature**:`lib/features/{module}/`
-- **依赖哪些 core/shared 能力**:
-- **被哪些其它模块依赖**:
+## 2. 模块结构(对照 architecture.md)
 
-## 3. 领域模型(domain/)
+### 2.1 模块归属与依赖
 
-### 实体(entities/)
+- **模块路径**:`lib/features/{module}/`
+- **是否使用 Flame**:`否 / 是(走 pixel-foundation.md "Flame 的位置")`
+- **是否带路由参数**:`否 / 是 → lib/shared/route_args/{module}_route_args.dart`
+- **路由路径**:`/{module}`
+- **依赖的 core/* 服务**(必须 Status ≥ scaffolded,见 architecture.md 状态标记):
+  - `lib/core/error/failures.dart` ✅ in-use
+  - `lib/core/time/game_clock.dart` (scaffolded) — 是/否使用
+  - `lib/core/storage/save_store/` (scaffolded) — 是/否使用
+  - 其它…
+- **依赖的 shared/* 资源**:
+  - `lib/shared/widgets/state_view_builder.dart` (in-use) — 默认用
+- **被哪些其它 module 引用**:`无 / route_args 被 home 引用 / ...`
+
+### 2.2 文件清单(本模块要新建/改的)
+
+| 文件 | 是否新建 | 备注 |
+|---|---|---|
+| `{module}_page.dart` | 新建 | Scaffold + StateViewBuilder |
+| `{module}_controller.dart` | 新建 | 状态唯一真理 |
+| `{module}_binding.dart` | 新建 | Get.lazyPut |
+| `{module}_models.dart` | 新建 / 不需要 | freezed 数据类 |
+| `{module}_api.dart` | 新建 / 不需要 | mock 优先 |
+| `lib/shared/route_args/{module}_route_args.dart` | 新建 / 不需要 | 跨模块契约 |
+| `{module}_game.dart` + `components/` | 新建 / 不需要 | 仅 Flame 模块 |
+| `lib/app/app_routes.dart` | 改 | 加 `static const {module} = '/...'` |
+| `lib/app/app_pages.dart` | 改 | 加 GetPage |
+| `lib/l10n/app_zh.arb` + `app_en.arb` | 改 | 加 `{module}*` keys(双语) |
+
+---
+
+## 3. 状态形状
 
 ```dart
-// 纯 Dart,无任何框架引用
-class Pet {
-  final String id;
-  final String name;
-  final PetSpecies species;
-  // ...
-}
+// {module}_controller.dart
+final state = Rx<ViewState<List<XxxItem>>>(const ViewState.loading());
+// 其它 .obs 字段(若有):
+// - selectedId: Rxn<String>()
+// - filter: Rx<XxxFilter>(...)
 ```
 
-### 值对象(value_objects/)
+- **何时 emit Loading**:`load()` 入口
+- **何时 emit Empty**:`api 返回空列表`
+- **何时 emit Error**:`catch on Failure`
+- **何时 emit Data**:`api 返回非空列表`
 
-(不可变 + 等值靠属性,例如 `Weight`, `BirthDate`)
+---
 
-### 仓储接口(repositories/)
+## 4. 数据流(端到端)
 
-```dart
-abstract class PetRepository {
-  Future<Pet?> findById(String id);
-  Future<List<Pet>> findAll();
-  Future<void> save(Pet pet);
-}
+```
+User tap → page.onTap → controller.{action}()
+                      → api.{call}()  → returns Future<XxxItem>
+                      → controller updates state
+                      → Obx() rebuilds page
 ```
 
-## 4. 用例(application/, 可选)
+- **API 形态**:mock 阶段返回 `Future<List<XxxItem>>` 写死;真接后端时 catch DioException → 抛 Failure 子类
+- **存档**(若有):`SaveStore<XxxSave>` + `SaveEnvelope` version `1`,初版 migrators 列表为空
+- **跨模块通信**(若有):`Get.find<SomeService>()` / `Rx<...>` / `Get.bus.fire(XxxEvent)`(对照 conventions §11)
 
-简单模块可省略;有跨实体编排时填:
+---
 
-```dart
-class CreatePetUseCase {
-  final PetRepository _repo;
-  // ...
-}
-```
+## 5. 测试要点(对照 conventions §7)
 
-## 5. 基础设施(infrastructure/)
+| 层 | 测什么 | 覆盖率目标 |
+|---|---|---|
+| models | fromJson↔toJson 往返 / defaults / copyWith | ≥90% |
+| api | mock 阶段:返回非空、id 不重复、字段合理 | ≥80% |
+| controller | mock api,3 状态(Data/Empty/Error)+ 每个公开方法 1 用例 | ≥70% |
+| page | 关键不可逆操作(删除/提交)的 widget 测 | ≥50%(关键路径必写) |
 
-### 数据来源
-- 后端 API: `GET/POST ...`
-- 本地存储: shared_preferences key `...` / SQLite 表 `...`
+---
 
-### DTO 与 converter
-```dart
-class PetDTO { ... }
-extension on PetDTO { Pet toDomain() => ...; }
-```
+## 6. 关键取舍(写下非显然的决策)
 
-### 仓储实现
-```dart
-class PetRepositoryImpl implements PetRepository {
-  final ApiClient _api;
-  final LocalStorage _storage;
-  // ...
-}
-```
+> 模型自己想不到的、半年后会被人质疑的选择都写下来,带 **Why**。例如:
+>
+> - 为什么用 `ListView` 而不是 `CustomScrollView` — Why: 列表项数 < 100,常规 ListView 性能足够,后者会增加学习成本
+> - 为什么 controller 暴露 `Rx<List>` 而不是 `Rx<ViewState<List>>` 套两层 — Why: ...
 
-## 6. UI(presentation/)
-
-### 页面与路由
-- 路由名:`AppRoutes.pet`
-- 页面文件:`pet_page.dart`
-
-### Controller 状态
-```dart
-class PetController extends GetxController {
-  final pets = <Pet>[].obs;
-  final loading = false.obs;
-  // 暴露的方法:loadAll(), select(id), ...
-}
-```
-
-### Binding
-```dart
-class PetBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => PetRepositoryImpl(...));
-    Get.lazyPut(() => PetController(Get.find()));
-  }
-}
-```
-
-## 7. 错误处理
-
-(列出可能的失败场景与对应的 Failure 类型)
-
-- 网络失败 → `NetworkFailure` → UI 显示"网络异常"
-- 数据不存在 → `NotFoundFailure` → UI 显示空状态
-- ...
-
-## 8. 测试要点
-
-- domain/ 的实体/值对象/用例 → 纯单元测试(无 widget,无 mock framework)
-- repository 实现 → mock 数据源
-- controller → mock repository,断言 `obs` 状态变化
-- page → widget test(快照核心交互)
-
-## 9. 关键取舍
-
-(写下做这个模块时**模型不容易自己想到**的决策与原因)
-
-- 为什么 ... 而不是 ...
-- ...
+(若没有非显然取舍,写"无,均按 conventions/architecture 默认")
 
 ---
 
