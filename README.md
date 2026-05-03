@@ -34,7 +34,7 @@ cute_pixel 把这些一次性约定好,新项目按 [doc/pixel-foundation.md](do
 | [doc/architecture.md](doc/architecture.md) | 通用 Flutter+GetX 模块架构 |
 | [doc/pixel-foundation.md](doc/pixel-foundation.md) | 像素底座专属(Flame、sprite、渲染器、像素纯度、输入、懒加载) |
 | [doc/conventions.md](doc/conventions.md) | 12 节编码标准(错误/i18n/测试/路由/freezed/时间存档…) |
-| [doc/decisions/](doc/decisions/) | ADR 体系(8 条,记录每个非显然决策的理由) |
+| [doc/decisions/](doc/decisions/) | ADR 体系(每个非显然决策的理由,详见 [doc/decisions/README.md](doc/decisions/README.md)) |
 | [lib/_manifest.yaml](lib/_manifest.yaml) | 项目状态机器可读索引(Agent 接手第一句话该读它) |
 
 ## 快速命令(走 Makefile,国内 pub 镜像已绑死)

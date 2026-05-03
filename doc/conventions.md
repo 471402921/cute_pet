@@ -614,7 +614,7 @@ make codegen-watch    # 开发期持续监听
 
 **游戏存档**:用 `lib/core/storage/save_store/` 的 `SaveStore<T>` + `SaveEnvelope<T>{version, savedAt, payload}`,schema 升级走 `SaveMigrator<T>` 链。**禁止** 直接 `prefs.setString` 存 JSON / 不带版本号持久化。用法、DI 注册、迁移示例见 [save_store/README.md](../lib/core/storage/save_store/README.md);策略见 [ADR-008](decisions/ADR-008-save-versioning-with-migrator.md)。
 
-**位置**:`lib/core/time/game_clock.dart` **Status:** `scaffolded`;`lib/core/storage/save_store/` **Status:** `scaffolded`(`SaveStoreImplPrefs` 依赖 `shared_preferences`,**Status:** `planned`,实装前 skeleton 不可用)。
+**位置**:`lib/core/time/game_clock.dart` **Status:** `scaffolded`;`lib/core/storage/save_store/` **Status:** `scaffolded`(`SaveStoreImplPrefs` 已基于 `shared_preferences` 实装,可直接 DI 注入,**Status:** `in-use`)。
 
 ---
 

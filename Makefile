@@ -4,7 +4,7 @@
 
 PUB_MIRROR := PUB_HOSTED_URL=https://pub.flutter-io.cn FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
-.PHONY: help get upgrade outdated add run test test-coverage analyze fmt fmt-check clean codegen codegen-watch check-arch eval-skills
+.PHONY: help get upgrade outdated add run test test-coverage analyze fmt fmt-check clean codegen codegen-watch check-arch check-assets check-arb-sync check-all eval-skills
 
 help:
 	@echo "Pub:"
@@ -22,8 +22,11 @@ help:
 	@echo "  make run [DEVICE=<id>]         flutter run                           (mirror)"
 	@echo "  make test                      flutter test"
 	@echo "  make test-coverage             flutter test --coverage"
-	@echo "  make analyze                   flutter analyze + check-arch"
+	@echo "  make analyze                   flutter analyze + check-all"
 	@echo "  make check-arch                tools/check_arch.sh (4 ironclad rules)"
+	@echo "  make check-assets              tools/check_assets.sh (assets/_template/ guards)"
+	@echo "  make check-arb-sync            tools/check_arb_sync.sh (zh/en ARB key parity)"
+	@echo "  make check-all                 check-arch + check-assets + check-arb-sync"
 	@echo "  make eval-skills               tools/eval_skills.sh (cute-pixel-* skill drift checks)"
 	@echo "  make fmt                       dart format ."
 	@echo "  make fmt-check                 dart format --set-exit-if-changed ."
@@ -57,11 +60,19 @@ test:
 test-coverage:
 	$(PUB_MIRROR) flutter test --coverage
 
-analyze: check-arch
+analyze: check-all
 	$(PUB_MIRROR) flutter analyze
 
 check-arch:
 	@bash tools/check_arch.sh
+
+check-assets:
+	@bash tools/check_assets.sh
+
+check-arb-sync:
+	@bash tools/check_arb_sync.sh
+
+check-all: check-arch check-assets check-arb-sync
 
 eval-skills:
 	@bash tools/eval_skills.sh

@@ -4,13 +4,7 @@ import 'dart:convert';
 import 'package:cute_pixel/core/storage/save_store/save_envelope.dart';
 import 'package:cute_pixel/core/storage/save_store/save_migrator.dart';
 import 'package:cute_pixel/core/storage/save_store/save_store.dart';
-
-// TODO(deps): shared_preferences is `planned`; run
-//   `make add PKG=shared_preferences`
-// before enabling this implementation. Until then this file is a
-// design-only skeleton and will not compile if uncommented.
-//
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// `shared_preferences`-backed [SaveStore] implementation.
 ///
@@ -39,10 +33,8 @@ class SaveStoreImplPrefs<T> implements SaveStore<T> {
 
   @override
   Future<T?> load() async {
-    // TODO(deps): replace with real shared_preferences read.
-    //   final prefs = await SharedPreferences.getInstance();
-    //   final raw = prefs.getString(storageKey);
-    const String? raw = null;
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(storageKey);
     if (raw == null) return null;
 
     final envelope = SaveEnvelope<T>.fromJson(
@@ -81,18 +73,13 @@ class SaveStoreImplPrefs<T> implements SaveStore<T> {
     );
     final raw = jsonEncode(envelope.toJson(toJsonT));
 
-    // TODO(deps): replace with real shared_preferences write.
-    //   final prefs = await SharedPreferences.getInstance();
-    //   await prefs.setString(storageKey, raw);
-    // Skeleton no-op so callers compile against the abstract type.
-    // ignore: unused_local_variable
-    final _ = raw;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(storageKey, raw);
   }
 
   @override
   Future<void> clear() async {
-    // TODO(deps): replace with real shared_preferences remove.
-    //   final prefs = await SharedPreferences.getInstance();
-    //   await prefs.remove(storageKey);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(storageKey);
   }
 }

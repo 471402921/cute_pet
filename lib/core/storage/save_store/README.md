@@ -12,7 +12,7 @@ JSON before it is decoded into the freezed `T`. See `ADR-008` for why.
 | `save_store.dart` | Abstract `SaveStore<T>` (`load` / `save` / `clear`). |
 | `save_envelope.dart` | `@freezed SaveEnvelope<T>{version, savedAt, payload}`. |
 | `save_migrator.dart` | Abstract `SaveMigrator<T>` (`fromVersion`/`toVersion`/`migrate(rawJson)`). |
-| `save_store_impl_prefs.dart` | `shared_preferences` impl. **Status: planned** until `make add PKG=shared_preferences`. |
+| `save_store_impl_prefs.dart` | `shared_preferences` impl. **Status: in-use** (callable; first feature DI consumer pending). |
 
 ## Usage
 
@@ -68,8 +68,6 @@ established Flutter default. Auth tokens are different and stay on
 
 ## Future work (TODOs in code)
 
-- Real `shared_preferences` read/write — currently stubbed; needs
-  `make add PKG=shared_preferences`.
 - In-memory fake impl for tests (today the test exercises envelope
   round-trip only, not the full store).
 - Async write debouncing / coalescing (multiple saves in one tick).

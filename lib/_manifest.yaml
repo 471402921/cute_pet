@@ -48,7 +48,7 @@ core_services:
     status: scaffolded
     used_by: []
     doc_ref: doc/decisions/ADR-008-save-versioning-with-migrator.md
-    notes: 持久化协议设计完整,落盘 impl(SaveStoreImplPrefs)stub 待 `make add PKG=shared_preferences` 后启用
+    notes: 持久化协议 + SaveStoreImplPrefs(shared_preferences-backed)均已落地,等首个 features DI 接入即升 in-use
 
   - name: HttpClient + AuthInterceptor
     file: lib/core/network/
@@ -134,18 +134,13 @@ features:
 
 # ---- 测试矩阵 ----
 tests:
-  total: 24
+  total: 24  # 跑 `make test` 拿真实数;per-file 数手维护飘得快,只留总数
   files:
-    - path: test/widget_test.dart
-      cases: 1
-    - path: test/core/time/game_clock_test.dart
-      cases: 4
-    - path: test/core/storage/save_store/save_envelope_test.dart
-      cases: 1
-    - path: test/features/_template/
-      cases: 3
-    - path: test/features/pet/
-      cases: 15
+    - test/widget_test.dart
+    - test/core/time/game_clock_test.dart
+    - test/core/storage/save_store/save_envelope_test.dart
+    - test/features/_template/
+    - test/features/pet/
   coverage_targets:  # 见 conventions §7
     domain: ">= 90%"
     api: ">= 80%"
@@ -164,7 +159,7 @@ docs:
   - file: doc/conventions.md
     role: 12 节编码标准(P0 + P1)
   - file: doc/decisions/
-    role: ADR 体系(8 条,详见 doc/decisions/README.md)
+    role: ADR 体系(详见 doc/decisions/README.md)
 
 # ---- 已采纳决策(ADR 摘要) ----
 decisions:
@@ -194,9 +189,6 @@ gaps_to_close:
   - need: 接后端
     blockers: [core/network/, core/auth/, core/env/]
     convention_refs: [conventions.md#1, conventions.md#2, conventions.md#3]
-  - need: 落地游戏存档
-    blockers: [shared_preferences 未装, SaveStoreImplPrefs 的 prefs 调用 stub]
-    convention_refs: [conventions.md#12]
   - need: 接真 sprite + 像素纯度
     blockers: [pet/pet_manifest.dart, pet/pet_animation_loader.dart, app_theme 像素纯度配置]
     convention_refs: [pixel-foundation.md#asset-资源约定, pixel-foundation.md#像素纯度自检]

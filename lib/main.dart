@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void main() {
-  runApp(const CutePetApp());
+  runApp(const CutePixelApp());
 }
 
-class CutePetApp extends StatelessWidget {
-  const CutePetApp({super.key});
+class CutePixelApp extends StatelessWidget {
+  const CutePixelApp({super.key});
 
   @override
   Widget build(BuildContext context) {

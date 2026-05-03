@@ -5,7 +5,7 @@ void main() {
   testWidgets('Home page renders English greeting and meet-the-pet button', (
     tester,
   ) async {
-    await tester.pumpWidget(const CutePetApp());
+    await tester.pumpWidget(const CutePixelApp());
     await tester.pumpAndSettle();
 
     expect(find.text('Cute Pet'), findsWidgets);

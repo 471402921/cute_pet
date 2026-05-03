@@ -29,7 +29,7 @@ lib/
 │   └── app_theme.dart             # 主题                                       [scaffolded]
 ├── core/                          # 跨切关注点(基础设施零件,业务无关)
 │   ├── network/                   # HTTP client(Dio + 拦截器)                [planned]   (空目录占位)
-│   ├── storage/                   # 本地存储封装                              [planned]   (空目录占位)
+│   ├── storage/                   # 本地存储封装(SaveStore + SaveEnvelope)   [scaffolded]
 │   ├── auth/                      # AuthService + token 生命周期              [planned]   (目录尚未创建)
 │   ├── env/                       # 环境配置(Env 抽象)                       [planned]   (目录尚未创建)
 │   ├── logging/                   # 日志门面                                  [planned]   (目录尚未创建)

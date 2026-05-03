@@ -13,7 +13,7 @@ cute_pixel 是像素风 Flutter + GetX + Flame **通用底座**,内置 cute_pet(
 1. [doc/architecture.md](doc/architecture.md) — 通用 Flutter+GetX 模块边界、4 条铁律、core/shared 边界、后端契约
 2. [doc/pixel-foundation.md](doc/pixel-foundation.md) — 像素底座专属(Flame 集成、asset 资源约定、渲染器/像素纯度/输入抽象/资源懒加载)
 3. [doc/conventions.md](doc/conventions.md) — 12 条编码标准(P0:错误/环境/认证/i18n/日志/lint/测试;P1:路由/状态/JSON/跨模块/时间存档)
-4. [doc/decisions/](doc/decisions/) — ADR 体系(9 条,记录每个非显然技术决策的理由)
+4. [doc/decisions/](doc/decisions/) — ADR 体系(每个非显然技术决策的理由,详见 [doc/decisions/README.md](doc/decisions/README.md))
 5. [doc/README.md](doc/README.md) — `prd/` 与 `design/` 的写作流程
 
 (根目录 [README.md](README.md) 是 cute_pixel 项目对外简介,不是 Claude 入口。先看本文件。)
@@ -102,21 +102,25 @@ assets/
 
 cute_pixel 用的 skills 命名为 `cute-pixel-*` 一族(对应"像素风 app 通用底座",可在 fork 出去的下一个像素 app 复用):
 
-**Spec → 代码 流水线**(每步都有强门禁,见 [ADR-009](doc/decisions/ADR-009-spec-driven-with-strong-gates.md)):
+**Spec → 代码 流水线**(features 与 core 双轨,每步强门禁,见 [ADR-009](doc/decisions/ADR-009-spec-driven-with-strong-gates.md)):
 
 ```
-/cute-pixel-doc-prd → /cute-pixel-doc-techpack → /cute-pixel-module-gen → /cute-pixel-test-gen
-   (prd-template)       (techpack-template)       (cp _template/+sed)      (按 PRD §7 AC 写)
+features:  /cute-pixel-doc-prd → /cute-pixel-doc-techpack → /cute-pixel-module-gen → /cute-pixel-test-gen
+              (prd-template)        (techpack-template)         (cp _template/+sed)      (按 PRD §7 AC 写)
+
+core 服务:  ADR(doc/decisions/) → /cute-pixel-doc-techpack core/X → 手工实装 → /cute-pixel-review core/X
+              (架构决策定锚)         (techpack-core-template)         (异构无模板)
 ```
 
 | Skill | 门禁 | 触发词 | 用途 |
 |---|---|---|---|
 | `/cute-pixel-status` | 无 | "现在项目什么状态" | 读 [_manifest.yaml](lib/_manifest.yaml) 回答模块/服务/测试当前状态(只读) |
 | `/cute-pixel-doc-prd` | 无 | "写 PRD" / "新建 PRD <模块>" | 按 [skill 内 prd-template.md](.claude/skills/cute-pixel-doc-prd/references/prd-template.md) 8 节生成 PRD-Lite(含 Figma 链接槽) |
-| `/cute-pixel-doc-techpack` | **PRD 必须定稿** | "写 TechPack" / "出技术方案" | 按 [skill 内 techpack-template.md](.claude/skills/cute-pixel-doc-techpack/references/techpack-template.md) 6 节生成 TechPack |
-| `/cute-pixel-module-gen` | **PRD + TechPack 都定稿** | "新建模块 X" / "起个 X feature" | `cp -r lib/features/_template/` + sed,跑 codegen+analyze+test |
+| `/cute-pixel-doc-techpack`(features 模式) | **PRD 必须定稿** | "写 TechPack <模块>" / "出技术方案" | 按 [techpack-template.md](.claude/skills/cute-pixel-doc-techpack/references/techpack-template.md) 6 节生成 TechPack |
+| `/cute-pixel-doc-techpack`(core 模式) | **对应 ADR 必须存在** | "写 TechPack core/network" / "core 服务 design" | 按 [techpack-core-template.md](.claude/skills/cute-pixel-doc-techpack/references/techpack-core-template.md) 生成 `doc/design/core-{service}.md` |
+| `/cute-pixel-module-gen` | **PRD + TechPack 都定稿**(仅 features) | "新建模块 X" / "起个 X feature" | `cp -r lib/features/_template/` + sed,跑 codegen+analyze+test |
 | `/cute-pixel-test-gen` | **PRD §7 AC 必须定稿** | "给 X 写测试" | 按 conventions §7 四层金字塔 + AC 对照写测试 |
-| `/cute-pixel-review` | 软(有 spec 则做对照) | "review features/X" | 4 条铁律 + 12 条 conventions + spec 一致性扫违规(只报告) |
+| `/cute-pixel-review` | 软(有 spec 则做对照) | "review features/X" / "review core/Y" | 4 条铁律 + 12 条 conventions + spec 一致性扫违规(features 看 PRD+TechPack;core 看 ADR+core TechPack;只报告) |
 
 **例外**:`skip-spec: <原因>` 可越门禁(prototype/throwaway 用),原因会写进生成代码的 binding 注释做 audit trail。
 
