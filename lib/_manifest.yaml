@@ -136,7 +136,7 @@ features:
 
 # ---- 测试矩阵 ----
 tests:
-  total: 24  # 跑 `make test` 拿真实数;per-file 数手维护飘得快,只留总数
+  total: 28  # 跑 `make test` 拿真实数;per-file 数手维护飘得快,只留总数
   files:
     - test/widget_test.dart
     - test/core/time/game_clock_test.dart
