@@ -636,10 +636,10 @@ make codegen-watch    # 开发期持续监听
 
 | 包 | 类型 | 版本 | 用途 | 引入时机 | 已装 |
 |---|---|---|---|---|---|
-| `dio` | dependencies | latest | HTTP client | 实现 `core/network/` 时 | ✗ |
-| `flutter_secure_storage` | dependencies | latest | Token 安全存储 | 实现 `core/auth/` 时 | ✗ |
-| `shared_preferences` | dependencies | latest | 游戏存档落盘(`SaveStore`) | 启用 `SaveStoreImplPrefs` 时 | ✗ |
-| `logger` | dependencies | latest | 日志门面 | 实现 `core/logging/` 时 | ✗ |
+| `dio` | dependencies | latest | HTTP client | 实现 `core/network/` 时 | ✓ |
+| `flutter_secure_storage` | dependencies | latest | Token 安全存储 | 实现 `core/auth/` 时 | ✓ |
+| `shared_preferences` | dependencies | latest | 游戏存档落盘(`SaveStore`) | 启用 `SaveStoreImplPrefs` 时 | ✓ |
+| `logger` | dependencies | latest | 日志门面 | 实现 `core/logging/` 时 | ✓ |
 | `flutter_localizations` | SDK | — | i18n 框架 | 第一个 ARB 文件时 | ✓ |
 | `intl` | dependencies | latest | i18n 配套 | 同上 | ✓ |
 | `mocktail` | dev_dependencies | latest | 测试 mock | 写第一个 controller 测时 | ✓ |

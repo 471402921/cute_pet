@@ -52,13 +52,13 @@ run:
 	$(PUB_MIRROR) flutter run $(if $(DEVICE),-d $(DEVICE))
 
 test:
-	flutter test
+	$(PUB_MIRROR) flutter test
 
 test-coverage:
-	flutter test --coverage
+	$(PUB_MIRROR) flutter test --coverage
 
 analyze: check-arch
-	flutter analyze
+	$(PUB_MIRROR) flutter analyze
 
 check-arch:
 	@bash tools/check_arch.sh
