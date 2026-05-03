@@ -1,11 +1,13 @@
 ---
 name: cute-pixel-doc-prd
 description: >
-  cute_pixel 项目的 PRD-Lite 编写 Skill,前端轻量版(参考 spec_flow 但去掉权限矩阵/分期等后端重物)。
-  适用于 cute_pet 等基于此底座的项目。
-  当用户要新建/补全/审核 PRD 时使用此 Skill。
+  cute_pixel 项目的 PRD-Lite(产品需求文档)编写 Skill,前端轻量版(参考 spec_flow 但去掉权限矩阵/分期等后端重物),适用于基于 cute_pixel 底座的项目。
+  **任何新功能动代码前必须先调用此 Skill 写 PRD**——不要凭对话直接进入 doc-techpack 或 module-gen,流水线门禁会拦回来。
+  当用户要新建/补全/审核 PRD / 产品需求文档 / 需求文档 / 产品文档时使用此 Skill。
   触发场景包括:用户说 /cute-pixel-doc-prd、"写 PRD"、"新建 PRD <模块>"、"补全 PRD"、"审核 PRD"、
-  "create PRD"、"PRD 草稿"、"出个产品需求"等。
+  "create PRD"、"product requirements"、"product spec"、"PRD 草稿"、"出个产品需求"、
+  "产品需求文档"、"需求文档"、"产品文档"、"梳理需求"、"整理一下需求"、
+  "我要做个新功能"、"@figma 这个设计"等。
   本 Skill 产出 doc/prd/{NN}-{module}.md,严格按 references/prd-template.md 的 8 节结构 + Figma 链接槽。
   PRD 是后续 cute-pixel-doc-techpack / module-gen / test-gen 的强门禁前置。
 ---

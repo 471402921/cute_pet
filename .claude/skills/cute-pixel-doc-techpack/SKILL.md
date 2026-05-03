@@ -1,11 +1,13 @@
 ---
 name: cute-pixel-doc-techpack
 description: >
-  cute_pixel 项目的 TechPack 编写 Skill,前端轻量版(对齐 Module-First Flat 而非 DDD 4 层)。
-  适用于 cute_pet 等基于此底座的项目。
-  当用户要新建/补全/审核 TechPack(技术方案)时使用此 Skill。
+  cute_pixel 项目的 TechPack(技术设计文档 / 设计文档)编写 Skill,前端轻量版(对齐 Module-First Flat 而非 DDD 4 层),适用于基于 cute_pixel 底座的项目。
+  **PRD 定稿后必须调用此 Skill 写 TechPack 才能进入 module-gen**,中间任何步都不能跳——module-gen 会拦没 TechPack 的请求。
+  当用户要新建/补全/审核 TechPack / 技术方案 / 设计文档 / 技术设计文档时使用此 Skill。
   触发场景包括:用户说 /cute-pixel-doc-techpack、"写 TechPack"、"出技术方案"、
-  "create techpack"、"design doc <模块>"、"补全 design"、"PRD 定稿了开 TechPack"等。
+  "create techpack"、"design doc <模块>"、"补全 design"、"PRD 定稿了开 TechPack"、
+  "技术设计文档"、"设计文档"、"技术方案设计"、"tech spec"、"technical design"、
+  "把 PRD 翻成方案"、"PRD 写好了下一步"等。
   本 Skill 产出 doc/design/{NN}-{module}.md,严格按 references/techpack-template.md 6 节结构。
   **强门禁**:必须有定稿 PRD(doc/prd/{NN}-{module}.md 状态 = 已定稿)才能开工,没有就引导先写 PRD。
 ---
@@ -25,7 +27,7 @@ description: >
 5. [doc/conventions.md](../../../doc/conventions.md) — §1 错误 / §7 测试 / §10 freezed / §11 跨模块 / §12 时间存档
 6. [lib/_manifest.yaml](../../../lib/_manifest.yaml) — 看 core/* 当前 Status,planned 的不能 import
 
-## 强门禁(Step 0,不可跳过)
+## Step 0 — Spec 强门禁(强制,不可跳过)
 
 执行任何动作前**必须先核对 PRD**:
 

@@ -2,10 +2,14 @@
 name: cute-pixel-test-gen
 description: >
   cute_pixel 系列(像素风 Flutter+GetX+Flame 架构)的模块测试生成 Skill,适用于基于 cute_pixel 底座的项目。
-  当用户想给某个已有模块按 conventions §7 四层金字塔补/生成测试时使用此 Skill。
-  触发场景包括:用户说 /cute-pixel-test-gen、/cute-pet-test-gen(legacy)、"给 health 写测试"、"补一下 features/pet 的测试"、
-  "测试覆盖率低,生成测试"、"add tests for X"、"为这个模块加测试用例"等。
-  本 Skill 只生成测试文件,不修改业务代码。
+  **凡是要按 PRD AC 生成或补充测试,必须走此 Skill**——直接让 Claude 写测试容易凑覆盖率而不对验收标准。
+  当用户想给某个已有模块按 conventions §7 四层金字塔补/生成测试,或要按 AC / 验收标准写测试时使用此 Skill。
+  触发场景包括:用户说 /cute-pixel-test-gen、/cute-pet-test-gen(legacy)、
+  "给 health 写测试"、"补一下 features/pet 的测试"、"测试覆盖率低,生成测试"、
+  "add tests for X"、"为这个模块加测试用例"、"写单测"、"加单元测试"、
+  "test coverage"、"测试覆盖"、"覆盖率不够"、"按 AC 测试"、"spec 测试"、
+  "test for {module}"等。
+  本 Skill 只生成测试文件,不修改业务代码;依赖 PRD §7 验收标准已定稿(强门禁)。
 ---
 
 # cute-pixel-test-gen
@@ -16,8 +20,9 @@ description: >
 
 每次执行**重新读**:
 
-1. [doc/conventions.md](../../../doc/conventions.md) §7 — 三层金字塔 + 覆盖率指标 + mocktail 模板
-2. [references/test-templates.md](references/test-templates.md) — 各层测什么、为什么、示意片段
+1. [doc/README.md](../../../doc/README.md) — PRD/TechPack/code 三阶段流程(理解 test-gen 在流水线里的位置)
+2. [doc/conventions.md](../../../doc/conventions.md) §7 — 三层金字塔 + 覆盖率指标 + mocktail 模板
+3. [references/test-templates.md](references/test-templates.md) — 各层测什么、为什么、示意片段
 
 ## Step 0 — Spec 门禁(强制,不可跳过)
 
