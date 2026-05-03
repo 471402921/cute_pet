@@ -6,20 +6,20 @@ description: >
   当用户要新建/补全/审核 PRD 时使用此 Skill。
   触发场景包括:用户说 /cute-pixel-doc-prd、"写 PRD"、"新建 PRD <模块>"、"补全 PRD"、"审核 PRD"、
   "create PRD"、"PRD 草稿"、"出个产品需求"等。
-  本 Skill 产出 doc/prd/{NN}-{module}.md,严格按 doc/prd/_TEMPLATE.md 的 8 节结构 + Figma 链接槽。
+  本 Skill 产出 doc/prd/{NN}-{module}.md,严格按 references/prd-template.md 的 8 节结构 + Figma 链接槽。
   PRD 是后续 cute-pixel-doc-techpack / module-gen / test-gen 的强门禁前置。
 ---
 
 # cute-pixel-doc-prd
 
-按 [doc/prd/_TEMPLATE.md](../../../doc/prd/_TEMPLATE.md) 的标准结构编写 PRD-Lite,产出 `doc/prd/{NN}-{module}.md`。
+按 [references/prd-template.md](references/prd-template.md) 的标准结构编写 PRD-Lite,产出 `doc/prd/{NN}-{module}.md`。
 
 ## 必读文档
 
 每次执行**重新读**:
 
 1. [doc/README.md](../../../doc/README.md) — PRD/TechPack/code 三阶段流程 + 命名约定
-2. [doc/prd/_TEMPLATE.md](../../../doc/prd/_TEMPLATE.md) — 8 节模板(含 §0 Figma 链接槽,**必填或留 TBD**)
+2. [references/prd-template.md](references/prd-template.md) — 8 节模板(含 §0 Figma 链接槽,**必填或留 TBD**)
 
 ## 工作流程
 
@@ -40,7 +40,7 @@ ls doc/prd/ | grep -E '^[0-9]{2}-' | sed 's/-.*//' | sort -n | tail -1
 
 ### Step 3 — 按模板生成初稿,逐节确认
 
-按 [_TEMPLATE.md](../../../doc/prd/_TEMPLATE.md) 8 节顺序生成,**每节生成后停下让用户确认**:
+按 [references/prd-template.md](references/prd-template.md) 8 节顺序生成,**每节生成后停下让用户确认**:
 
 | 节 | 重点 |
 |---|---|

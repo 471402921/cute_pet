@@ -6,20 +6,20 @@ description: >
   当用户要新建/补全/审核 TechPack(技术方案)时使用此 Skill。
   触发场景包括:用户说 /cute-pixel-doc-techpack、"写 TechPack"、"出技术方案"、
   "create techpack"、"design doc <模块>"、"补全 design"、"PRD 定稿了开 TechPack"等。
-  本 Skill 产出 doc/design/{NN}-{module}.md,严格按 doc/design/_TEMPLATE.md 6 节结构。
+  本 Skill 产出 doc/design/{NN}-{module}.md,严格按 references/techpack-template.md 6 节结构。
   **强门禁**:必须有定稿 PRD(doc/prd/{NN}-{module}.md 状态 = 已定稿)才能开工,没有就引导先写 PRD。
 ---
 
 # cute-pixel-doc-techpack
 
-按 [doc/design/_TEMPLATE.md](../../../doc/design/_TEMPLATE.md) 把定稿 PRD 翻成可写代码的技术方案,产出 `doc/design/{NN}-{module}.md`。
+按 [references/techpack-template.md](references/techpack-template.md) 把定稿 PRD 翻成可写代码的技术方案,产出 `doc/design/{NN}-{module}.md`。
 
 ## 必读文档
 
 每次执行**重新读**:
 
 1. [doc/README.md](../../../doc/README.md) — 三阶段流程
-2. [doc/design/_TEMPLATE.md](../../../doc/design/_TEMPLATE.md) — 6 节模板(对齐 Module-First Flat)
+2. [references/techpack-template.md](references/techpack-template.md) — 6 节模板(对齐 Module-First Flat)
 3. [doc/architecture.md](../../../doc/architecture.md) — 模块边界、4 条铁律、core/shared
 4. [doc/pixel-foundation.md](../../../doc/pixel-foundation.md) — Flame 集成契约(Flame 模块必读)
 5. [doc/conventions.md](../../../doc/conventions.md) — §1 错误 / §7 测试 / §10 freezed / §11 跨模块 / §12 时间存档
@@ -59,7 +59,7 @@ description: >
 
 ### Step 3 — 按模板生成初稿
 
-按 [_TEMPLATE.md](../../../doc/design/_TEMPLATE.md) 6 节顺序:
+按 [references/techpack-template.md](references/techpack-template.md) 6 节顺序:
 
 | 节 | 重点 |
 |---|---|
