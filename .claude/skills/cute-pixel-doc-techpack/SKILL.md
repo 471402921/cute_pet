@@ -23,7 +23,7 @@ description: >
 1. [doc/README.md](../../../doc/README.md) — 三阶段流程
 2. [references/techpack-template.md](references/techpack-template.md) — 6 节模板(对齐 Module-First Flat)
 3. [doc/architecture.md](../../../doc/architecture.md) — 模块边界、4 条铁律、core/shared
-4. [doc/pixel-foundation.md](../../../doc/pixel-foundation.md) — Flame 集成契约(Flame 模块必读)
+4. [doc/pixel-foundation.md](../../../doc/pixel-foundation.md) — Flame 集成 + 像素纯度 + 输入抽象 + 资源懒加载契约。**涉及任何 sprite/图片渲染、键盘鼠标输入、或大体积 asset 的模块都必读**(几乎所有像素 app 模块都涉及其中至少一项)
 5. [doc/conventions.md](../../../doc/conventions.md) — §1 错误 / §7 测试 / §10 freezed / §11 跨模块 / §12 时间存档
 6. [lib/_manifest.yaml](../../../lib/_manifest.yaml) — 看 core/* 当前 Status,planned 的不能 import
 

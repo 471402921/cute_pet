@@ -31,7 +31,22 @@
   - `lib/shared/widgets/state_view_builder.dart` (in-use) — 默认用
 - **被哪些其它 module 引用**:`无 / route_args 被 home 引用 / ...`
 
-### 2.2 文件清单(本模块要新建/改的)
+### 2.2 像素底座维度(对照 [pixel-foundation.md](../../../doc/pixel-foundation.md) 4 节)
+
+> 任何渲染像素图、处理键盘鼠标、加载体积 asset 的模块都该回答这 4 题。纯表单/列表型模块全填"无"也要写,留个 audit trail。
+
+- **渲染器选择(web)**:`默认跟 app(CanvasKit)` / `本模块对 HTML renderer 有特殊偏好,理由:...`
+- **像素纯度**:本模块**是否渲染** sprite / 图片 / 自定义画图?
+  - `否`(纯文字/按钮/列表)
+  - `是` → 所有 `Image.asset(...)` / `Sprite` 必须 `FilterQuality.none` + 整数缩放比;字体若用位图字体在此声明;参考 [pixel-foundation.md "像素纯度自检"](../../../doc/pixel-foundation.md#像素纯度自检)
+- **输入语义**:本模块需要哪些输入(一旦 `core/input/` scaffolded 就在此声明订阅)?
+  - `仅 tap`(手机 + web 鼠标点击,默认)
+  - `PrimaryAction / SecondaryAction / Move / 其它` → 列出来 + 在 web 上对应的键位预期(如 WASD / 方向键)
+- **资源懒加载**:本模块初始 asset 大小估算?
+  - `<5MB` → 走默认(随 app bundle 一起加载)
+  - `>=5MB` → 列出懒加载策略(按 species/action 拆 / 进入 page 时再加载 / 预加载触发条件等),参考 [pixel-foundation.md "资源懒加载"](../../../doc/pixel-foundation.md#资源懒加载)
+
+### 2.3 文件清单(本模块要新建/改的)
 
 | 文件 | 是否新建 | 备注 |
 |---|---|---|
