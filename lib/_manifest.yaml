@@ -1,0 +1,200 @@
+# cute_pixel 项目状态索引(机器可读)
+#
+# 这份 _manifest.yaml 是 Agent 接手时的"先看一眼"入口。它把
+# 散在 lib/ + test/ + doc/ 里的事实(模块/服务/状态/测试)集中成
+# 一份单文件,Agent 不需要 grep 整个仓库就能回答:
+#   - 现在有哪些模块?它们什么状态?
+#   - 哪些 core 服务能直接 import,哪些是 planned?
+#   - 测试覆盖到哪儿了?
+#
+# 维护节奏:每次 module-gen / 接入新 core 服务 / 新增 ADR 时由
+# Agent 同步更新本文件;cute-pixel-status skill 也以本文件为
+# ground truth。Status 与 doc/architecture.md / pixel-foundation.md
+# 的 Status 标记必须一致(漂移以代码事实为准,本文件先改)。
+
+schema_version: 1
+generated_at: 2026-05-03
+project: cute_pixel
+foundation: cute-pixel  # 像素风 Flutter+GetX+Flame 通用底座
+
+# ---- App-level 装配 ----
+app:
+  routes_file: lib/app/app_routes.dart           # in-use
+  pages_file: lib/app/app_pages.dart             # in-use
+  global_binding: lib/app/app_binding.dart       # scaffolded(被 main 装配,无 features import)
+  theme: lib/app/app_theme.dart                  # scaffolded(同上)
+
+# ---- core 服务清单 ----
+# Status 含义见 doc/architecture.md "状态标记说明":
+#   in-use     = 文件存在且至少被 features/ import
+#   scaffolded = 文件存在但 features/ 没引用
+#   planned    = 不存在,文档里写了
+core_services:
+  - name: Failure
+    file: lib/core/error/failures.dart
+    status: in-use
+    used_by: [features/pet]
+    doc_ref: doc/conventions.md#1-错误处理流水线
+
+  - name: GameClock
+    file: lib/core/time/game_clock.dart
+    status: scaffolded
+    used_by: []
+    doc_ref: doc/decisions/ADR-007-game-clock-as-singleton.md
+    notes: 时间驱动业务必须订阅它,禁止 Timer.periodic;真用时在 app_binding.dart 注册 Get.put<GameClock>(GameClock(), permanent: true)
+
+  - name: SaveStore<T> + SaveEnvelope + SaveMigrator
+    file: lib/core/storage/save_store/
+    status: scaffolded
+    used_by: []
+    doc_ref: doc/decisions/ADR-008-save-versioning-with-migrator.md
+    notes: 持久化协议设计完整,落盘 impl(SaveStoreImplPrefs)stub 待 `make add PKG=shared_preferences` 后启用
+
+  - name: HttpClient + AuthInterceptor
+    file: lib/core/network/
+    status: planned
+    doc_ref: doc/conventions.md#3-认证与-token-生命周期
+    notes: 目录存在但为空;接后端时实现
+
+  - name: AuthService
+    file: lib/core/auth/auth_service.dart
+    status: planned
+    doc_ref: doc/conventions.md#3-认证与-token-生命周期
+    notes: 目录与文件均未创建
+
+  - name: Env
+    file: lib/core/env/env.dart
+    status: planned
+    doc_ref: doc/conventions.md#2-环境配置flavor
+
+  - name: log (logger 门面)
+    file: lib/core/logging/log.dart
+    status: planned
+    doc_ref: doc/conventions.md#5-日志与可观测
+    notes: 依赖 Env,需先建 core/env/
+
+# ---- shared 资源 ----
+shared:
+  - name: ViewState<T> + StateViewBuilder
+    files:
+      - lib/shared/widgets/view_state.dart
+      - lib/shared/widgets/state_view_builder.dart
+    status: in-use
+    used_by: [features/pet, features/_template]
+    doc_ref: doc/conventions.md#9-加载空错误状态-ui-模式
+
+  - name: PetRouteArgs(路由参数)
+    file: lib/shared/route_args/pet_route_args.dart
+    status: in-use
+    used_by: [features/home, features/pet]
+    notes: 路由参数统一放 shared/route_args/(跨模块契约,见 architecture.md "Module-First Flat" 路由参数说明)
+
+  - name: shared/state/(跨模块响应式状态)
+    file: lib/shared/state/
+    status: planned
+
+# ---- features 模块清单 ----
+features:
+  - name: home
+    status: in-use
+    has_flame: false
+    files:
+      - lib/features/home/home_page.dart
+    routes: [/]
+    notes: 主页,跳 pet 入口;无 controller/binding(是 StatelessWidget)
+
+  - name: pet
+    status: in-use
+    has_flame: true
+    files:
+      - lib/features/pet/pet_page.dart
+      - lib/features/pet/pet_controller.dart
+      - lib/features/pet/pet_binding.dart
+      - lib/features/pet/pet_models.dart
+      - lib/features/pet/pet_api.dart
+      - lib/features/pet/pet_game.dart
+      - lib/features/pet/components/pet_component.dart
+    routes: [/pet]
+    planned_files:
+      - lib/features/pet/pet_manifest.dart        # 接真 sprite 时加
+      - lib/features/pet/pet_animation_loader.dart # 同上
+    notes: 当前是占位渲染(色块+文字);真 sprite 接入由 pixel-foundation.md "Sprite 资源约定" 指引
+
+  - name: _template
+    status: in-use(模板)
+    has_flame: false
+    files:
+      - lib/features/_template/_template_page.dart
+      - lib/features/_template/_template_controller.dart
+      - lib/features/_template/_template_binding.dart
+      - lib/features/_template/_template_models.dart
+      - lib/features/_template/_template_api.dart
+    routes: [/_template]   # 注册但不暴露入口
+    notes: cute-pixel-module-gen skill 的 ground truth;新模块走 cp + sed 路径
+
+# ---- 测试矩阵 ----
+tests:
+  total: 24
+  files:
+    - path: test/widget_test.dart
+      cases: 1
+    - path: test/core/time/game_clock_test.dart
+      cases: 4
+    - path: test/core/storage/save_store/save_envelope_test.dart
+      cases: 1
+    - path: test/features/_template/
+      cases: 3
+    - path: test/features/pet/
+      cases: 15
+  coverage_targets:  # 见 conventions §7
+    domain: ">= 90%"
+    api: ">= 80%"
+    controller: ">= 70%"
+    page: ">= 50%"
+  current_coverage: not_measured  # 跑 `make test-coverage` 后填
+
+# ---- 项目规约入口 ----
+docs:
+  - file: CLAUDE.md
+    role: 项目入口与命令
+  - file: doc/architecture.md
+    role: 通用 Flutter+GetX 架构(模块边界、4 条铁律、core/shared)
+  - file: doc/pixel-foundation.md
+    role: 像素底座(Flame、sprite、渲染器、像素纯度、输入抽象、资源懒加载)
+  - file: doc/conventions.md
+    role: 12 节编码标准(P0 + P1)
+  - file: doc/decisions/
+    role: ADR 体系(8 条,详见 doc/decisions/README.md)
+
+# ---- 已采纳决策(ADR 摘要) ----
+decisions:
+  - id: ADR-001
+    title: 状态管理选 GetX 不选 Riverpod
+  - id: ADR-002
+    title: Flame 仅限游戏化模块,不外溢
+  - id: ADR-003
+    title: freezed 3.x 数据类用 abstract class with _$X 模式
+  - id: ADR-004
+    title: 测试 mock 用 mocktail 不用 mockito
+  - id: ADR-005
+    title: Module-First Flat 而非 DDD 4 层
+  - id: ADR-006
+    title: doc 三层化(architecture / pixel-foundation / apps)
+  - id: ADR-007
+    title: GameClock 作为 core 单例,禁止 controller 自起 Timer
+  - id: ADR-008
+    title: 存档套 SaveEnvelope + 版本化 migrator
+
+# ---- 未实现的 P0 conventions ----
+# 这些是 conventions 已规定、但代码还没落地的能力。开新模块需要它们时,
+# 先在这里把对应 core 服务从 planned 升到 in-use,再写 features 代码。
+gaps_to_close:
+  - need: 接后端
+    blockers: [core/network/, core/auth/, core/env/]
+    convention_refs: [conventions.md#1, conventions.md#2, conventions.md#3]
+  - need: 落地游戏存档
+    blockers: [shared_preferences 未装, SaveStoreImplPrefs 的 prefs 调用 stub]
+    convention_refs: [conventions.md#12]
+  - need: 接真 sprite + 像素纯度
+    blockers: [pet/pet_manifest.dart, pet/pet_animation_loader.dart, app_theme 像素纯度配置]
+    convention_refs: [pixel-foundation.md#sprite-资源约定, pixel-foundation.md#像素纯度自检]

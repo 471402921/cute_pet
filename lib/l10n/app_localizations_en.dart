@@ -42,6 +42,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get petActionSleep => 'Sleep';
 
   @override
+  String get templateTitle => 'Template';
+
+  @override
+  String get templateEmpty => 'Nothing here yet';
+
+  @override
+  String get templateRetry => 'Reload';
+
+  @override
   String get commonRetry => 'Retry';
 
   @override

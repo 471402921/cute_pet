@@ -1,6 +1,6 @@
-import 'package:cute_pet/app/app_routes.dart';
-import 'package:cute_pet/features/pet/pet_route_args.dart';
-import 'package:cute_pet/l10n/app_localizations.dart';
+import 'package:cute_pixel/app/app_routes.dart';
+import 'package:cute_pixel/l10n/app_localizations.dart';
+import 'package:cute_pixel/shared/route_args/pet_route_args.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

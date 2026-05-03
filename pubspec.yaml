@@ -1,5 +1,5 @@
-name: cute_pet
-description: "Cute Pet — Flutter + GetX + Flame application."
+name: cute_pixel
+description: "cute_pixel — 像素风 Flutter + GetX + Flame 通用底座(内置 cute_pet demo)。"
 publish_to: 'none'
 
 version: 1.0.0+1

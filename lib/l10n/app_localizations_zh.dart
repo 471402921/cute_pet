@@ -42,6 +42,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get petActionSleep => '睡觉';
 
   @override
+  String get templateTitle => '模板';
+
+  @override
+  String get templateEmpty => '暂无内容';
+
+  @override
+  String get templateRetry => '重新加载';
+
+  @override
   String get commonRetry => '重试';
 
   @override

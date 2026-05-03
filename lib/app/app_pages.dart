@@ -1,7 +1,9 @@
-import 'package:cute_pet/app/app_routes.dart';
-import 'package:cute_pet/features/home/home_page.dart';
-import 'package:cute_pet/features/pet/pet_binding.dart';
-import 'package:cute_pet/features/pet/pet_page.dart';
+import 'package:cute_pixel/app/app_routes.dart';
+import 'package:cute_pixel/features/_template/_template_binding.dart';
+import 'package:cute_pixel/features/_template/_template_page.dart';
+import 'package:cute_pixel/features/home/home_page.dart';
+import 'package:cute_pixel/features/pet/pet_binding.dart';
+import 'package:cute_pixel/features/pet/pet_page.dart';
 import 'package:get/get.dart';
 
 abstract class AppPages {
@@ -11,6 +13,11 @@ abstract class AppPages {
       name: AppRoutes.pet,
       page: () => const PetPage(),
       binding: PetBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.template,
+      page: () => const TemplatePage(),
+      binding: TemplateBinding(),
     ),
   ];
 }

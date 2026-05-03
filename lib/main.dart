@@ -1,8 +1,8 @@
-import 'package:cute_pet/app/app_binding.dart';
-import 'package:cute_pet/app/app_pages.dart';
-import 'package:cute_pet/app/app_routes.dart';
-import 'package:cute_pet/app/app_theme.dart';
-import 'package:cute_pet/l10n/app_localizations.dart';
+import 'package:cute_pixel/app/app_binding.dart';
+import 'package:cute_pixel/app/app_pages.dart';
+import 'package:cute_pixel/app/app_routes.dart';
+import 'package:cute_pixel/app/app_theme.dart';
+import 'package:cute_pixel/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

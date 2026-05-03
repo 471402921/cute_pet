@@ -11,6 +11,9 @@
   "petActionWalk": "Walk",
   "petActionRun": "Run",
   "petActionSleep": "Sleep",
+  "templateTitle": "Template",
+  "templateEmpty": "Nothing here yet",
+  "templateRetry": "Reload",
   "commonRetry": "Retry",
   "commonEmpty": "Nothing here",
   "commonLoading": "Loading"

@@ -1,4 +1,4 @@
-import 'package:cute_pet/core/error/failures.dart';
+import 'package:cute_pixel/core/error/failures.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'view_state.freezed.dart';

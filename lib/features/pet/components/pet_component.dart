@@ -1,4 +1,4 @@
-import 'package:cute_pet/features/pet/pet_models.dart';
+import 'package:cute_pixel/features/pet/pet_models.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 

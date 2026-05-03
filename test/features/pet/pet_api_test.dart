@@ -1,5 +1,5 @@
-import 'package:cute_pet/features/pet/pet_api.dart';
-import 'package:cute_pet/features/pet/pet_models.dart';
+import 'package:cute_pixel/features/pet/pet_api.dart';
+import 'package:cute_pixel/features/pet/pet_models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

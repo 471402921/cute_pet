@@ -164,6 +164,24 @@ abstract class AppLocalizations {
   /// **'睡觉'**
   String get petActionSleep;
 
+  /// No description provided for @templateTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'模板'**
+  String get templateTitle;
+
+  /// No description provided for @templateEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂无内容'**
+  String get templateEmpty;
+
+  /// No description provided for @templateRetry.
+  ///
+  /// In zh, this message translates to:
+  /// **'重新加载'**
+  String get templateRetry;
+
   /// No description provided for @commonRetry.
   ///
   /// In zh, this message translates to:

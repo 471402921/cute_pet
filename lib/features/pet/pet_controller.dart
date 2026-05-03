@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:cute_pet/core/error/failures.dart';
-import 'package:cute_pet/features/pet/pet_api.dart';
-import 'package:cute_pet/features/pet/pet_models.dart';
-import 'package:cute_pet/shared/widgets/view_state.dart';
+import 'package:cute_pixel/core/error/failures.dart';
+import 'package:cute_pixel/features/pet/pet_api.dart';
+import 'package:cute_pixel/features/pet/pet_models.dart';
+import 'package:cute_pixel/shared/widgets/view_state.dart';
 import 'package:get/get.dart';
 
 class PetController extends GetxController {

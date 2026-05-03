@@ -1,6 +1,8 @@
 # Conventions
 
-本文档定义 cute_pet 的生产级代码标准。架构(模块边界、目录结构、4 条铁律)见 [architecture.md](architecture.md);本文规定**怎么写**。
+本文档定义 cute_pixel 的生产级代码标准。架构(模块边界、目录结构、4 条铁律)见 [architecture.md](architecture.md);本文规定**怎么写**。
+
+> **Status 标记**:下文每个 `**位置**:` 行都带一个 `[planned | scaffolded | in-use]` 标签,语义见 [architecture.md 状态标记说明](architecture.md#状态标记说明)。生成 import 之前**先核对 Status**,`planned` 的文件不存在,直接 import 会编译失败。
 
 ## 目录
 
@@ -18,6 +20,7 @@ P1(应该有)
 - [9. 加载/空/错误状态 UI 模式](#9-加载空错误状态-ui-模式)
 - [10. JSON 序列化](#10-json-序列化)
 - [11. 跨模块通信](#11-跨模块通信)
+- [12. 时间与存档](#12-时间与存档)
 
 附录
 - [A. 依赖清单](#a-依赖清单)
@@ -28,7 +31,7 @@ P1(应该有)
 
 **标准**:所有失败用 `core/error/failures.dart` 的 `Failure` 子类型表达;`api → controller → page` 的传递路径固定;UI 兜底统一在全局,业务页只关心展示。
 
-**位置**:`lib/core/error/failures.dart`
+**位置**:`lib/core/error/failures.dart`  **Status:** `in-use`
 
 ```dart
 sealed class Failure {
@@ -91,7 +94,7 @@ Future<void> load() async {
 
 **标准**:所有 base URL、开关、第三方 SDK key 通过 `--dart-define` 注入,在 `core/env/env.dart` 集中读取;**禁止**在业务代码硬写 URL/key。
 
-**位置**:`lib/core/env/env.dart`
+**位置**:`lib/core/env/env.dart`  **Status:** `planned`(文件与目录均未创建)
 
 ```dart
 abstract class Env {
@@ -125,7 +128,7 @@ flutter build apk --dart-define=API_BASE_URL=https://api.example.com --dart-defi
 
 **标准**:Token 必须存 `flutter_secure_storage`(底层 iOS Keychain / Android EncryptedSharedPreferences);全局 `AuthService` 是 token 唯一真理;401 在 `core/network/` 拦截器统一清理 + 跳登录,业务层不处理 401。
 
-**位置**:`lib/core/auth/auth_service.dart`,在 `app/app_binding.dart` 中 `Get.put(AuthService(), permanent: true)`
+**位置**:`lib/core/auth/auth_service.dart`,在 `app/app_binding.dart` 中 `Get.put(AuthService(), permanent: true)`  **Status:** `lib/core/auth/auth_service.dart` `planned`(目录与文件均未创建);`app/app_binding.dart` `scaffolded`(文件存在但 `AuthService` 注册尚未加入)
 
 ```dart
 class AuthService extends GetxService {
@@ -153,7 +156,7 @@ class AuthService extends GetxService {
 }
 ```
 
-**network 拦截器**(`lib/core/network/auth_interceptor.dart`):
+**network 拦截器**(`lib/core/network/auth_interceptor.dart`)  **Status:** `planned`(`core/network/` 目录存在但为空):
 
 ```dart
 onRequest: (options, handler) {
@@ -183,7 +186,7 @@ onError: (e, handler) {
 
 **标准**:**中文 + 英文**双语,两份 ARB 同步维护;所有用户可见字符串走 `flutter_localizations` 的 `gen-l10n`;ARB 文件按模块前缀键命名;**禁止**硬编码用户可见字符串;**禁止**只在一种语言里加 key(代码 review 阻断)。
 
-**位置**:`lib/l10n/app_zh.arb` + `lib/l10n/app_en.arb`(两份地位平等,新增 key 必须**同时**在两边写完)
+**位置**:`lib/l10n/app_zh.arb` + `lib/l10n/app_en.arb`(两份地位平等,新增 key 必须**同时**在两边写完)  **Status:** `app_zh.arb` `in-use`、`app_en.arb` `in-use`(`main.dart` 已配 `AppLocalizations`,`features/home`、`features/pet` 已使用)
 
 **键命名**:`{module}{Concept}` 小驼峰,例 `petActionEat` / `homeGreeting` / `commonRetry`。跨模块复用的字符串放 `common*` 前缀。
 
@@ -254,7 +257,7 @@ Text(l10n.homeGreeting('小柴'));
 
 **标准**:用 `logger` 包统一门面;级别明确;后端返回的 `traceId` 必须打到日志;dev 环境彩色控台,prod 环境精简输出(远端上报留接口)。
 
-**位置**:`lib/core/logging/log.dart`(单顶层 `log` 变量,免去每文件初始化)
+**位置**:`lib/core/logging/log.dart`(单顶层 `log` 变量,免去每文件初始化)  **Status:** `planned`(目录与文件均未创建;依赖 `Env`,需先建 `core/env/`)
 
 ```dart
 import 'package:logger/logger.dart' as l;
@@ -302,7 +305,7 @@ final log = l.Logger(
 
 **标准**:`analysis_options.yaml` 在 `flutter_lints` 基础上加严;`dart format` 必须过(行宽默认 80);CI/pre-commit 强制(本期暂未引入 CI,本地约束)。
 
-**位置**:`analysis_options.yaml`(项目根)
+**位置**:`analysis_options.yaml`(项目根)  **Status:** `in-use`(项目根已有此文件)
 
 ```yaml
 include: package:flutter_lints/flutter.yaml
@@ -342,10 +345,10 @@ linter:
 **导入顺序**(`directives_ordering` 强制):
 1. `dart:` 内置
 2. `package:flutter` 与 `package:` 第三方
-3. 项目内 `package:cute_pet/...`(用 `always_use_package_imports`,禁止相对导入)
+3. 项目内 `package:cute_pixel/...`(用 `always_use_package_imports`,禁止相对导入)
 
 **禁止**:
-- `import '../../../foo.dart'`(用 `package:cute_pet/foo.dart`)
+- `import '../../../foo.dart'`(用 `package:cute_pixel/foo.dart`)
 - `print()` / `debugPrint()`(用 `log.d/i/w/e`)
 - 提交未格式化的代码
 
@@ -419,7 +422,7 @@ void main() {
 
 **标准**:每条带参数的路由定义 `{Module}RouteArgs` 类;`Get.toNamed` 的 `arguments` 强类型;page 第一行从 `Get.arguments` 强制转型。
 
-**位置**:`features/{module}/{module}_route_args.dart`
+**位置**:`shared/route_args/{module}_route_args.dart`(跨模块契约,**不**放在模块内,见 [architecture.md "Module-First Flat"](architecture.md#module-first-flat模块内部结构) 的路由参数说明)  **Status:** 实例 `lib/shared/route_args/pet_route_args.dart` `in-use`
 
 ```dart
 class PetRouteArgs {
@@ -454,7 +457,7 @@ Widget build(BuildContext context) {
 
 **`ViewState<T>`** 是 freezed sealed union,定义见 [§10 数据建模](#10-数据建模freezed--json_serializable)。
 
-**位置**:`lib/shared/widgets/state_view_builder.dart`
+**位置**:`lib/shared/widgets/state_view_builder.dart`  **Status:** `in-use`(被 `features/pet/pet_page.dart` import)
 
 ```dart
 class StateViewBuilder<T> extends StatelessWidget {
@@ -530,10 +533,12 @@ abstract class Pet with _$Pet {
 
 ### Sealed Union 模板(`ViewState<T>` 等)
 
+**位置**:`lib/shared/widgets/view_state.dart`(+ 生成产物 `view_state.freezed.dart`)  **Status:** `in-use`(被 `features/pet/pet_controller.dart`、`features/pet/pet_game.dart` import)
+
 ```dart
 // shared/widgets/view_state.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cute_pet/core/error/failures.dart';
+import 'package:cute_pixel/core/error/failures.dart';
 
 part 'view_state.freezed.dart';
 
@@ -601,6 +606,18 @@ make codegen-watch    # 开发期持续监听
 
 ---
 
+## 12. 时间与存档
+
+像素 app 通用底座的两条收口规则,细节见各自的 ADR/README。
+
+**时间驱动**:用 `lib/core/time/game_clock.dart` 的 `GameClock`(GetxService),按需订阅 `tick1s` / `tick1m` / `tick10m`;离线/重启 catch-up 走 `GameClock.catchUp(lastSavedAt)`。**禁止** controller 内 `Timer.periodic`。理由与替代方案见 [ADR-007](decisions/ADR-007-game-clock-as-singleton.md)。
+
+**游戏存档**:用 `lib/core/storage/save_store/` 的 `SaveStore<T>` + `SaveEnvelope<T>{version, savedAt, payload}`,schema 升级走 `SaveMigrator<T>` 链。**禁止** 直接 `prefs.setString` 存 JSON / 不带版本号持久化。用法、DI 注册、迁移示例见 [save_store/README.md](../lib/core/storage/save_store/README.md);策略见 [ADR-008](decisions/ADR-008-save-versioning-with-migrator.md)。
+
+**位置**:`lib/core/time/game_clock.dart` **Status:** `scaffolded`;`lib/core/storage/save_store/` **Status:** `scaffolded`(`SaveStoreImplPrefs` 依赖 `shared_preferences`,**Status:** `planned`,实装前 skeleton 不可用)。
+
+---
+
 ## A. 依赖清单
 
 下面是 conventions 引入的包,**第一次实际用到时**才装。装的时候顺手更新本表的"已装"列。
@@ -621,6 +638,7 @@ make codegen-watch    # 开发期持续监听
 |---|---|---|---|---|---|
 | `dio` | dependencies | latest | HTTP client | 实现 `core/network/` 时 | ✗ |
 | `flutter_secure_storage` | dependencies | latest | Token 安全存储 | 实现 `core/auth/` 时 | ✗ |
+| `shared_preferences` | dependencies | latest | 游戏存档落盘(`SaveStore`) | 启用 `SaveStoreImplPrefs` 时 | ✗ |
 | `logger` | dependencies | latest | 日志门面 | 实现 `core/logging/` 时 | ✗ |
 | `flutter_localizations` | SDK | — | i18n 框架 | 第一个 ARB 文件时 | ✓ |
 | `intl` | dependencies | latest | i18n 配套 | 同上 | ✓ |

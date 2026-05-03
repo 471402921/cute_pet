@@ -11,6 +11,9 @@
   "petActionWalk": "散步",
   "petActionRun": "奔跑",
   "petActionSleep": "睡觉",
+  "templateTitle": "模板",
+  "templateEmpty": "暂无内容",
+  "templateRetry": "重新加载",
   "commonRetry": "重试",
   "commonEmpty": "什么都没有",
   "commonLoading": "加载中"

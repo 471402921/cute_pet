@@ -1,9 +1,9 @@
-import 'package:cute_pet/features/pet/pet_controller.dart';
-import 'package:cute_pet/features/pet/pet_game.dart';
-import 'package:cute_pet/features/pet/pet_models.dart';
-import 'package:cute_pet/features/pet/pet_route_args.dart';
-import 'package:cute_pet/l10n/app_localizations.dart';
-import 'package:cute_pet/shared/widgets/state_view_builder.dart';
+import 'package:cute_pixel/features/pet/pet_controller.dart';
+import 'package:cute_pixel/features/pet/pet_game.dart';
+import 'package:cute_pixel/features/pet/pet_models.dart';
+import 'package:cute_pixel/l10n/app_localizations.dart';
+import 'package:cute_pixel/shared/route_args/pet_route_args.dart';
+import 'package:cute_pixel/shared/widgets/state_view_builder.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

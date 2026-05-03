@@ -1,4 +1,4 @@
-import 'package:cute_pet/main.dart';
+import 'package:cute_pixel/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

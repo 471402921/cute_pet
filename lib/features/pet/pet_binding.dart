@@ -1,5 +1,5 @@
-import 'package:cute_pet/features/pet/pet_api.dart';
-import 'package:cute_pet/features/pet/pet_controller.dart';
+import 'package:cute_pixel/features/pet/pet_api.dart';
+import 'package:cute_pixel/features/pet/pet_controller.dart';
 import 'package:get/get.dart';
 
 class PetBinding extends Bindings {
