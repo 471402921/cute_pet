@@ -10,7 +10,8 @@
 # 1. 拷贝模板到目标 namespace(如食物类)
 cp -r assets/items/_template assets/items/food/apple
 
-# 2. 改 manifest.json:
+# 2. 改 **新拷出来的** assets/items/food/apple/manifest.json
+#    (不是模板原件 assets/items/_template/manifest.json,后者永远不动):
 #    - itemId: "_template" → "apple"
 #    - displayName: 替换为『苹果』之类
 #    - category / rarity 按业务调

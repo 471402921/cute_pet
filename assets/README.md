@@ -18,10 +18,11 @@
 ## 通用约定
 
 1. **每类资源用自己类型的模板**,不要混用(sprite 的 manifest 跟 item 的不一样)
-2. **`_template/` 不进 bundle**——pubspec.yaml 的 `flutter.assets:` 永远不要加 `_template/` 路径
-3. **按 namespace 分组**,如 `assets/sprites/pets/{species}/`、`assets/items/food/{itemId}/`
-4. **像素资源整数尺寸,无插值**——见 [doc/pixel-foundation.md "像素纯度"](../doc/pixel-foundation.md#像素纯度)
-5. **新资源都要在 pubspec.yaml 启用对应 namespace**,否则 build 时拿不到
+2. **`_template/` 是 ground truth,永远不动**——cp 出去的副本你随便改,但模板原件本身不能编辑(包括它的 manifest.json),否则会污染之后所有从它拷出去的资源
+3. **`_template/` 不进 bundle**——pubspec.yaml 的 `flutter.assets:` 永远不要加 `_template/` 路径
+4. **按 namespace 分组**,如 `assets/sprites/pets/{species}/`、`assets/items/food/{itemId}/`
+5. **像素资源整数尺寸,无插值**——见 [doc/pixel-foundation.md "像素纯度"](../doc/pixel-foundation.md#像素纯度)
+6. **新资源都要在 pubspec.yaml 启用对应 namespace**,否则 build 时拿不到
 
 ## 不做
 

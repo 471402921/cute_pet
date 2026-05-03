@@ -10,7 +10,8 @@
 # 1. 拷贝模板到目标 namespace(假设 pet 模块的 pets/ namespace)
 cp -r assets/sprites/_template assets/sprites/pets/shibainu
 
-# 2. 改 manifest.json:
+# 2. 改 **新拷出来的** assets/sprites/pets/shibainu/manifest.json
+#    (不是模板原件 assets/sprites/_template/manifest.json,后者永远不动):
 #    - species: "_template" → "shibainu"
 #    - displayName: 替换为『柴犬』之类
 #    - 各 action 的 frameCount / stepTime / directional 按你的 PNG 实际调

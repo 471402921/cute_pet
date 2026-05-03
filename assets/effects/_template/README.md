@@ -8,7 +8,9 @@
 # 1. 拷贝模板
 cp -r assets/effects/_template assets/effects/sparkle
 
-# 2. 改 manifest.json 的 frameCount / stepTime / loop 字段
+# 2. 改 **新拷出来的** assets/effects/sparkle/manifest.json
+#    (不是模板原件 assets/effects/_template/manifest.json,后者永远不动):
+#    改 frameCount / stepTime / loop 字段
 
 # 3. 出 PNG sprite sheet 放进 assets/effects/sparkle/
 
