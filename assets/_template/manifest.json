@@ -1,0 +1,13 @@
+{
+  "species": "_template",
+  "displayName": "模板物种(替换为实际显示名,如『柴犬』)",
+  "tileSize": { "w": 64, "h": 64 },
+  "actions": {
+    "idle":  { "frameCount": 4, "stepTime": 0.20, "directional": true  },
+    "walk":  { "frameCount": 6, "stepTime": 0.12, "directional": true  },
+    "run":   { "frameCount": 6, "stepTime": 0.08, "directional": true  },
+    "eat":   { "frameCount": 6, "stepTime": 0.15, "directional": false },
+    "drink": { "frameCount": 6, "stepTime": 0.15, "directional": false },
+    "sleep": { "frameCount": 4, "stepTime": 0.40, "directional": false }
+  }
+}

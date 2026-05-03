@@ -114,6 +114,24 @@ assets/{namespace}/{species}/
 - **加新动作** = manifest 里加一行 + 出图;只需 `Action` enum 加一项
 - **加 8 方向** = 改 `Direction` enum + 改加载逻辑;少量改动
 
+### 起新 sprite 的步骤
+
+仓库内置 [`assets/_template/`](../assets/_template/) 是目录脚手架(无真 PNG,只示范结构 + manifest schema)。起新 species 走 4 步:
+
+```bash
+# 1. 从模板拷出
+cp -r assets/_template assets/{namespace}/{species}     # 例:assets/pets/shibainu
+
+# 2. 改 manifest.json 的 species / displayName / 各 action 字段
+
+# 3. 出 PNG 放进新目录(命名规则见 assets/_template/README.md)
+
+# 4. pubspec.yaml 启用 namespace(去掉 flutter.assets 那段注释,改 namespace)
+#    → make get → Sprite.load('{namespace}/{species}/idle_south.png')
+```
+
+`assets/_template/` **不进** build bundle(pubspec.yaml 不启用),仅作设计参考。
+
 ## 渲染器选择(Web)
 
 ### 为什么必要

@@ -35,3 +35,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+
+  # ── sprite assets ───────────────────────────────────────────────────────
+  # 接 sprite 时按 namespace 启用,例如 cute_pet 的 pet 模块用 pets/:
+  # assets:
+  #   - assets/pets/
+  # 模板见 assets/_template/(本身不进 bundle,只作设计参考)。
+  # 完整目录约定见 doc/pixel-foundation.md "Sprite 资源约定"。
