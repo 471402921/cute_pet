@@ -1,0 +1,9 @@
+{
+  "itemId": "_template",
+  "displayName": "模板道具(替换为实际显示名,如『苹果』)",
+  "category": "food",
+  "rarity": "common",
+  "icon": "icon.png",
+  "frameCount": 1,
+  "stepTime": 0.0
+}

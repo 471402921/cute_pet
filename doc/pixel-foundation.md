@@ -67,23 +67,43 @@ features/pet/
 
 参考实现见 [lib/features/pet/pet_game.dart](../lib/features/pet/pet_game.dart)。
 
-## Sprite 资源约定
+## Asset 资源约定
 
-每个实体一个文件夹,内含 manifest 与 PNG。`assets/{namespace}/` 的 namespace 由具体 app 决定(本仓库 features/pet/ 用 `pets/`,种菜 app 可用 `plants/`,养鱼可用 `fishes/`),manifest schema 通用:
+像素 app 的资源不只是 sprite——还有道具图标、UI 按钮/图标/9-slice 边框、场景背景、特效、瓦片地图、音频、字体。cute_pixel 的 `assets/` 按**类型**而非业务模块组织,让跨模块共享自然发生。
+
+### 顶层结构
 
 ```
-assets/{namespace}/{species}/
-├── manifest.json
-├── idle_north.png       (directional: true 时,4 张 north/east/south/west)
-├── idle_east.png
-├── idle_south.png
-├── idle_west.png
-├── eat.png              (directional: false 时,1 张所有方向共用)
-├── sleep.png
-└── ...
+assets/
+├── sprites/    # 角色/生物 sprite(宠物、NPC、敌人) — 必须有 manifest.json
+├── items/      # 道具/物品图标(食物、装备、货币)— 有 manifest.json
+├── ui/
+│   ├── buttons/  # 多状态按钮(normal/pressed/disabled)
+│   ├── icons/    # 单帧 UI 图标
+│   └── frames/   # 9-slice 边框/弹窗
+├── scenes/     # 场景背景图、视差层
+├── effects/    # 特效动画(粒子、过渡) — 有 manifest.json
+├── tilemaps/   # Tiled 编辑器导出的瓦片地图(.tmx/.json + tileset.png)
+├── audio/
+│   ├── sfx/      # 短促音效(.ogg)
+│   └── music/    # 背景音乐(.ogg)
+└── fonts/      # 像素字体(BMFont 位图字体或 TTF)
 ```
 
-### manifest.json schema
+每类下都有 `_template/` 骨架,**不进 build bundle**(pubspec.yaml 不启用模板路径)。起新资源 = `cp -r` 对应类型的 `_template/` → 改名 → 改 manifest(若有)→ 在 pubspec.yaml 启用 namespace。
+
+各类的具体 PNG 命名规则、manifest schema、起新资源步骤,见各类 `_template/README.md`。导航见 [`assets/README.md`](../assets/README.md)。
+
+### 通用规则
+
+- **按 namespace 分组**:`assets/sprites/pets/{species}/`、`assets/items/food/{itemId}/`、`assets/ui/buttons/{buttonId}/`,namespace 是**业务分类**(pets / npcs / food / equipment / nav / social...),不要按业务模块名切分
+- **每类资源用自己类型的模板**,不要混用(sprite 的 manifest schema 跟 item 的不一样)
+- **像素纯度**:像素艺术资源严格整数尺寸,加载时 `FilterQuality.none` 关闭插值——见下文 [像素纯度](#像素纯度自检) 节
+- **依赖按需引入**:tilemaps 需 `flame_tiled`,audio 需 `audioplayers`/`flame_audio`,位图字体需第三方解析包——首个用到时 `make add` 并起 ADR
+
+### Sprite manifest schema(角色/生物的核心契约)
+
+`assets/sprites/{namespace}/{species}/manifest.json`:
 
 ```json
 {
@@ -104,33 +124,46 @@ assets/{namespace}/{species}/
 **字段说明**
 
 - `tileSize`:每帧像素尺寸(SpriteAnimation 切帧依据)
-- `frameCount`:该动作的帧数
+- `frameCount`:该动作的帧数(横向铺在 sprite sheet 上)
 - `stepTime`:每帧持续秒数
-- `directional`:`true` 加载 4 个方向的 PNG;`false` 加载单张所有方向共用
+- `directional`:`true` → 加载 4 个方向 PNG(后缀 `_{north|east|south|west}.png`);`false` → 单张所有方向共用
 
-**扩展原则**(零代码改动是底座的核心承诺)
+**目录布局**
 
-- **加新实体** = 新建 `assets/{namespace}/{new_species}/` + 一份 manifest + PNG;只需 `Species` enum 加一项
+```
+assets/sprites/{namespace}/{species}/
+├── manifest.json
+├── idle_north.png       (directional: true → 4 张)
+├── idle_east.png
+├── idle_south.png
+├── idle_west.png
+├── eat.png              (directional: false → 1 张)
+└── ...
+```
+
+### 扩展原则(零代码改动是底座的核心承诺)
+
+- **加新角色** = `cp -r assets/sprites/_template assets/sprites/{namespace}/{new_species}/` + 改 manifest + 出图;只需 `Species` enum 加一项
 - **加新动作** = manifest 里加一行 + 出图;只需 `Action` enum 加一项
 - **加 8 方向** = 改 `Direction` enum + 改加载逻辑;少量改动
+- **加新道具/UI/场景/特效** = 拷贝对应 `_template/` 改名,无代码改动(若是查表渲染)
 
 ### 起新 sprite 的步骤
 
-仓库内置 [`assets/_template/`](../assets/_template/) 是目录脚手架(无真 PNG,只示范结构 + manifest schema)。起新 species 走 4 步:
+1. `cp -r assets/sprites/_template assets/sprites/{namespace}/{species}`(例:`assets/sprites/pets/shibainu`)
+2. 改 manifest.json 的 `species` / `displayName` / 各 action 字段
+3. 出 PNG 放进新目录(命名规则见 [`assets/sprites/_template/README.md`](../assets/sprites/_template/README.md))
+4. pubspec.yaml `flutter.assets:` 段加 `- assets/sprites/{namespace}/{species}/`
+5. `make get` → `Sprite.load('sprites/{namespace}/{species}/idle_south.png')`
 
-```bash
-# 1. 从模板拷出
-cp -r assets/_template assets/{namespace}/{species}     # 例:assets/pets/shibainu
+其它类型起新资源步骤见各类 `_template/README.md`,模式一致(cp → 改 manifest → 出图 → 启用 → 加载)。
 
-# 2. 改 manifest.json 的 species / displayName / 各 action 字段
+### 不做
 
-# 3. 出 PNG 放进新目录(命名规则见 assets/_template/README.md)
-
-# 4. pubspec.yaml 启用 namespace(去掉 flutter.assets 那段注释,改 namespace)
-#    → make get → Sprite.load('{namespace}/{species}/idle_south.png')
-```
-
-`assets/_template/` **不进** build bundle(pubspec.yaml 不启用),仅作设计参考。
+- **不**在 pubspec.yaml 启用任何 `_template/` 路径(模板不进 bundle)
+- **不**按业务模块切分(`assets/pet_module/` 是反的——asset 跨模块共享)
+- **不**在资源目录写业务逻辑(逻辑归 `lib/features/{module}/{module}_animation_loader.dart` 等)
+- **不**在 `assets/` 根放散落 PNG——必须先选类型目录
 
 ## 渲染器选择(Web)
 

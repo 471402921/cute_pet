@@ -11,7 +11,7 @@ cute_pixel 是像素风 Flutter + GetX + Flame **通用底座**,内置 cute_pet(
 ## 写代码前必读(顺序)
 
 1. [doc/architecture.md](doc/architecture.md) — 通用 Flutter+GetX 模块边界、4 条铁律、core/shared 边界、后端契约
-2. [doc/pixel-foundation.md](doc/pixel-foundation.md) — 像素底座专属(Flame 集成、sprite 契约、渲染器/像素纯度/输入抽象/资源懒加载)
+2. [doc/pixel-foundation.md](doc/pixel-foundation.md) — 像素底座专属(Flame 集成、asset 资源约定、渲染器/像素纯度/输入抽象/资源懒加载)
 3. [doc/conventions.md](doc/conventions.md) — 12 条编码标准(P0:错误/环境/认证/i18n/日志/lint/测试;P1:路由/状态/JSON/跨模块/时间存档)
 4. [doc/decisions/](doc/decisions/) — ADR 体系(9 条,记录每个非显然技术决策的理由)
 5. [doc/README.md](doc/README.md) — `prd/` 与 `design/` 的写作流程
@@ -79,6 +79,24 @@ features/{module}/
 参考样板:[lib/features/pet/](lib/features/pet/)。
 
 **路由参数**`{module}_route_args.dart` 不在模块内,统一放 [lib/shared/route_args/](lib/shared/route_args/)(跨模块契约,避免 features 互引)。
+
+## 资源目录(按类型分,不按模块分)
+
+[assets/](assets/) 按**资源类型**(不是业务模块)分 8 类,每类自带 `_template/` 骨架,**模板不进 bundle**:
+
+```
+assets/
+├── sprites/  # 角色/生物 sprite(含 manifest.json)
+├── items/    # 道具图标(含 manifest.json)
+├── ui/       # buttons/ icons/ frames/
+├── scenes/   # 背景/视差层
+├── effects/  # 特效动画(含 manifest.json)
+├── tilemaps/ # Tiled 地图(需 flame_tiled)
+├── audio/    # sfx/ music/(需 audioplayers/flame_audio)
+└── fonts/    # 像素字体(BMFont 或 TTF)
+```
+
+起新资源 = `cp -r assets/{type}/_template assets/{type}/{namespace}/{id}/` → 改 manifest(若有) → pubspec.yaml 启用 namespace。导航见 [assets/README.md](assets/README.md),完整契约见 [doc/pixel-foundation.md "Asset 资源约定"](doc/pixel-foundation.md#asset-资源约定)。**不**按业务模块切分(`assets/pet_module/` 是反的——asset 跨模块共享)。
 
 ## 可用 Skills(项目本地 `.claude/skills/`)
 

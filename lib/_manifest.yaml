@@ -199,4 +199,4 @@ gaps_to_close:
     convention_refs: [conventions.md#12]
   - need: 接真 sprite + 像素纯度
     blockers: [pet/pet_manifest.dart, pet/pet_animation_loader.dart, app_theme 像素纯度配置]
-    convention_refs: [pixel-foundation.md#sprite-资源约定, pixel-foundation.md#像素纯度自检]
+    convention_refs: [pixel-foundation.md#asset-资源约定, pixel-foundation.md#像素纯度自检]

@@ -108,7 +108,7 @@ find lib/features/{module} test/features/{module} -name "*.dart" -exec sed -i ''
 - 额外读 [doc/pixel-foundation.md](../../../doc/pixel-foundation.md) "Flame 的位置" 与 "Controller ↔ Flame Game 同步契约"
 - 参考 [lib/features/pet/](../../../lib/features/pet/) 加 `{module}_game.dart` + `components/{module}_component.dart`
 - Flame Component **只负责渲染**,业务状态留在 controller(铁律)
-- 如果模块要接真 sprite(不只是占位色块),按 [doc/pixel-foundation.md "起新 sprite 的步骤"](../../../doc/pixel-foundation.md#起新-sprite-的步骤) 起 `assets/{namespace}/{species}/`(从 [assets/_template/](../../../assets/_template/) cp 起步,**不要**手撸目录结构)
+- 如果模块要接真 sprite(不只是占位色块),按 [doc/pixel-foundation.md "起新 sprite 的步骤"](../../../doc/pixel-foundation.md#起新-sprite-的步骤) 起 `assets/sprites/{namespace}/{species}/`(从 [assets/sprites/_template/](../../../assets/sprites/_template/) cp 起步,**不要**手撸目录结构)。其它资源类型(道具图标、UI 元素、背景、特效等)走对应 `assets/{type}/_template/`,导航见 [assets/README.md](../../../assets/README.md)
 
 ### Step 6 — 路由参数(仅当 Step 1 选了路由参数)
 

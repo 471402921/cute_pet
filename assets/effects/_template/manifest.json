@@ -1,0 +1,7 @@
+{
+  "effectId": "_template",
+  "tileSize": { "w": 32, "h": 32 },
+  "frameCount": 8,
+  "stepTime": 0.06,
+  "loop": false
+}

@@ -36,9 +36,14 @@ flutter:
   uses-material-design: true
   generate: true
 
-  # ── sprite assets ───────────────────────────────────────────────────────
-  # 接 sprite 时按 namespace 启用,例如 cute_pet 的 pet 模块用 pets/:
+  # ── 资源声明 ────────────────────────────────────────────────────────────
+  # cute_pixel 资源按类型分目录:assets/sprites/ items/ ui/ scenes/ effects/
+  # tilemaps/ audio/ fonts/。每类下都有 _template/ 骨架,**不要**启用模板。
+  # 真资源按 namespace 启用,例如:
   # assets:
-  #   - assets/pets/
-  # 模板见 assets/_template/(本身不进 bundle,只作设计参考)。
-  # 完整目录约定见 doc/pixel-foundation.md "Sprite 资源约定"。
+  #   - assets/sprites/pets/shibainu/
+  #   - assets/items/food/apple/
+  #   - assets/ui/buttons/primary/
+  #   - assets/audio/sfx/click/
+  # TTF 字体走单独的 fonts: 段(见 assets/fonts/_template/README.md 选项 B)。
+  # 完整目录约定见 doc/pixel-foundation.md "Asset 资源约定" 与 assets/README.md。
