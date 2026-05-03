@@ -8,6 +8,10 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// StatefulWidget instead of GetView<PetController>: PetGame must be created
+// once and persist across rebuilds — wrapping it in GameWidget inside a
+// GetView/Obx would re-instantiate PetGame on every state change, leaking the
+// Flame component tree and breaking ever() subscriptions in PetGame.onLoad.
 class PetPage extends StatefulWidget {
   const PetPage({super.key});
 

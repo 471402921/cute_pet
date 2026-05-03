@@ -1,6 +1,6 @@
 import 'package:cute_pixel/core/error/failures.dart';
 import 'package:cute_pixel/l10n/app_localizations.dart';
-import 'package:cute_pixel/shared/widgets/view_state.dart';
+import 'package:cute_pixel/shared/state/view_state.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

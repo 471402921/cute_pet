@@ -42,7 +42,7 @@ Get.lazyPut<SaveStore<PetSave>>(() => SaveStoreImplPrefs<PetSave>(
 // 4. Use from a controller.
 final store = Get.find<SaveStore<PetSave>>();
 final save = await store.load();    // null on first launch, else PetSave
-await store.save(save!.copyWith(satiety: 80));
+await store.save(save!.copyWith(mood: 'happy'));
 ```
 
 At `load()`, if the on-disk envelope's `version` is older than

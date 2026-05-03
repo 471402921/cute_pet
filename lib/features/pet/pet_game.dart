@@ -1,7 +1,7 @@
 import 'package:cute_pixel/features/pet/components/pet_component.dart';
 import 'package:cute_pixel/features/pet/pet_controller.dart';
 import 'package:cute_pixel/features/pet/pet_models.dart';
-import 'package:cute_pixel/shared/widgets/view_state.dart';
+import 'package:cute_pixel/shared/state/view_state.dart';
 import 'package:flame/game.dart';
 import 'package:get/get.dart';
 

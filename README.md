@@ -61,9 +61,14 @@ make run [DEVICE=<id>]   # flutter run
 
 ## Fork 出新像素 app 的快路径
 
-1. `git clone` 到新名字 / 改 `pubspec.yaml` 的 `name:` / 改所有 `package:cute_pixel/` 引用
-2. 删 `lib/features/pet/`(或保留作为参考)
-3. 改 `assets/{namespace}/`(`pets/` → 你的 `plants/` 或 `fishes/`)
-4. 用 `/cute-pixel-module-gen` 起你的第一个业务模块
+```bash
+git clone https://github.com/471402921/cute_pixel.git my_new_app
+cd my_new_app
+bash tools/fork_rename.sh NEW_NAME=tomato_garden STRIP_PET=1
+```
+
+`fork_rename.sh` 7 步:改 `pubspec.yaml.name` → 全局 `package:cute_pixel/` import → `CutePixelApp` 类名 → 重置 ARB `appTitle` → 可选删 `features/pet/` → 重置 `_manifest.yaml` → 跑 `make check-all + analyze + test`。脚本本身写明了它**不**做的几件事(填 ARB 真值、清 git history 等)和已知雷区。
+
+第一次 fork 跑下来踩到的新坑,反向 PR 回 `tools/fork_rename.sh`——这个脚本本身就是 fork 经验的存活点。
 
 剩下就靠 [doc/pixel-foundation.md](doc/pixel-foundation.md) + 4 条铁律 + `make analyze` 一路兜住。

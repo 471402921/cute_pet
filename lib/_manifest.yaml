@@ -77,7 +77,7 @@ core_services:
 shared:
   - name: ViewState<T> + StateViewBuilder
     files:
-      - lib/shared/widgets/view_state.dart
+      - lib/shared/state/view_state.dart
       - lib/shared/widgets/state_view_builder.dart
     status: in-use
     used_by: [features/pet, features/_template]
@@ -91,7 +91,9 @@ shared:
 
   - name: shared/state/(跨模块响应式状态)
     file: lib/shared/state/
-    status: planned
+    status: in-use
+    used_by: [features/pet, features/_template]
+    notes: 首位住户 view_state.dart;后续跨模块响应式类型(Result<T> / PaginatedList<T> 等)都进这里
 
 # ---- features 模块清单 ----
 features:

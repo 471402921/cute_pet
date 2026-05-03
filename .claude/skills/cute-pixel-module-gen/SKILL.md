@@ -127,7 +127,7 @@ page 第一行:`final args = Get.arguments as {Module}RouteArgs;`(conventions §
 
 在 `lib/l10n/app_zh.arb` 与 `lib/l10n/app_en.arb` **两份都加**所有 `{module}*` key。**只加一边算违规**(conventions §4)。命名 `{module}{Concept}` 小驼峰。
 
-`_template` 已有的 `templateTitle / templateEmpty / templateRetry` 三个 key 是给模板用的,新模块**不要**复用这些 key,加自己的(`{module}Title` 等)。
+`_template` 已有的 `templateTitle / templateEmpty` 两个 key 是给模板用的,新模块**不要**复用这些 key,加自己的(`{module}Title` 等)。重试按钮**复用** `commonRetry`(跨模块共享),不要起 `{module}Retry`。
 
 ### Step 8 — 注册路由
 

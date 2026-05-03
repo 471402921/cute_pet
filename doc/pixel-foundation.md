@@ -4,6 +4,20 @@
 
 > 状态标记 `planned | scaffolded | in-use` 的含义见 [architecture.md "状态标记说明"](architecture.md#状态标记说明)。
 
+## Status snapshot(本文涵盖 6 节,各节落地度速查)
+
+| 节 | Status | 说明 |
+|---|---|---|
+| [Flame 的位置](#flame-的位置) | **in-use** | features/pet/ 是首位用户,契约稳定可参照 |
+| [Controller ↔ Flame Game 同步契约](#controller--flame-game-同步契约) | **in-use** | 同上,见 [pet_game.dart](../lib/features/pet/pet_game.dart) |
+| [Asset 资源约定](#asset-资源约定) | **scaffolded** | 8 类目录骨架已立(见 [assets/](../assets/));真 sprite/PNG 待接入 |
+| [渲染器选择(Web)](#渲染器选择web) | **planned** | web 平台未启用,接 web 时落 |
+| [像素纯度自检](#像素纯度自检) | **planned** | pet 模块当前是占位渲染(色块);**接真 sprite 第一刻必须落本节** |
+| [输入抽象](#输入抽象) | **planned** | core/input/ 不存在;mobile-only 阶段不阻塞,加 web/keyboard 时落 |
+| [资源懒加载](#资源懒加载) | **planned** | 当前 sprite < 1MB,bundle 直加载够用;asset 总量过 5MB 时启动落地 |
+
+**何时回看本文档**:接真 sprite 前必读 §像素纯度;启用 web 前必读 §渲染器选择 + §输入抽象;asset 总量上来必读 §资源懒加载。Flame + Asset 两节随时可读(已落地)。
+
 ## 目标与适用范围
 
 适用于:

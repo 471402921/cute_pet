@@ -520,7 +520,8 @@ abstract class Pet with _$Pet {
     required String id,
     required String name,
     required PetSpecies species,
-    required int satiety,
+    required double x,
+    required double y,
     @Default(PetAction.idle) PetAction action,
     @Default(PetDirection.south) PetDirection facing,
   }) = _Pet;
@@ -533,10 +534,10 @@ abstract class Pet with _$Pet {
 
 ### Sealed Union 模板(`ViewState<T>` 等)
 
-**位置**:`lib/shared/widgets/view_state.dart`(+ 生成产物 `view_state.freezed.dart`)  **Status:** `in-use`(被 `features/pet/pet_controller.dart`、`features/pet/pet_game.dart` import)
+**位置**:`lib/shared/state/view_state.dart`(+ 生成产物 `view_state.freezed.dart`)  **Status:** `in-use`(被 `features/pet/pet_controller.dart`、`features/pet/pet_game.dart` import)
 
 ```dart
-// shared/widgets/view_state.dart
+// shared/state/view_state.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cute_pixel/core/error/failures.dart';
 

@@ -66,10 +66,16 @@ cute-pixel-{name}/
 
 ## 起新像素 app 的 fork 流程
 
-1. `git clone https://github.com/471402921/cute_pixel.git my_new_app/`
-2. 改 `pubspec.yaml` 的 `name:` + 全局替 `package:cute_pixel/` import
-3. 删 `lib/features/pet/`(或保留作为参考 demo)
-4. `/cute-pixel-doc-prd <module>` 起第一个业务模块 PRD
-5. 后面照流水线走
+```bash
+git clone https://github.com/471402921/cute_pixel.git my_new_app
+cd my_new_app
+bash tools/fork_rename.sh NEW_NAME=tomato_garden STRIP_PET=1
+```
+
+7 步机械改名 + 守门验证(改 pubspec / package: imports / class 名 / ARB / manifest)。脚本本身列了它**不**做的事和雷区。第一次 fork 跑完后:
+
+1. 填 `lib/l10n/app_{zh,en}.arb` 的 `appTitle`(脚本写的是 `TODO_<name>_app_title` 占位)
+2. `/cute-pixel-doc-prd <module>` 起第一个业务模块 PRD
+3. 后面照流水线走
 
 整套 `.claude/skills/` + `tools/` + `doc/{architecture,conventions,pixel-foundation,decisions}/` 都是底座,跨 app 直接复用。

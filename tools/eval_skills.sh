@@ -48,6 +48,39 @@ else
   ok "ground truth tests exist: test/features/_template/"
 fi
 
+# ---- Check 1b: assets/ ground truth (each type has _template/ skeleton) ------
+# The cute-pixel-module-gen Step 5 (sprite接入) and assets/README.md navigator
+# both depend on every assets/{type}/_template/ existing with a README.
+# Regression here means new modules can't reliably cp from a known-good template.
+ASSETS_DIR="$REPO_ROOT/assets"
+declare -a ASSET_TEMPLATES=(
+  "sprites/_template"
+  "items/_template"
+  "ui/buttons/_template"
+  "ui/icons/_template"
+  "ui/frames/_template"
+  "scenes/_template"
+  "effects/_template"
+  "tilemaps/_template"
+  "audio/sfx/_template"
+  "audio/music/_template"
+  "fonts/_template"
+)
+asset_template_fails=0
+for t in "${ASSET_TEMPLATES[@]}"; do
+  dir="$ASSETS_DIR/$t"
+  if [ ! -d "$dir" ]; then
+    fail "assets ground truth: $t missing"
+    asset_template_fails=$((asset_template_fails + 1))
+    continue
+  fi
+  if [ ! -f "$dir/README.md" ]; then
+    fail "assets ground truth: $t/README.md missing (every type template needs a README)"
+    asset_template_fails=$((asset_template_fails + 1))
+  fi
+done
+[ "$asset_template_fails" -eq 0 ] && ok "assets ground truth: all ${#ASSET_TEMPLATES[@]} type templates present with README"
+
 # ---- Check 2: each skill's frontmatter name matches its dir ------------------
 for skill_dir in "$SKILL_DIR"/cute-pixel-*/; do
   [ -d "$skill_dir" ] || continue
