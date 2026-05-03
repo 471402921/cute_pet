@@ -10,6 +10,9 @@
 # metadata keys) from both files via python3, diff. If either file is missing
 # or invalid JSON, fail loudly.
 #
+# Requires python3 in PATH (most dev / CI envs have it; if you ever strip
+# python from CI, port to a small dart one-shot script and call via `dart run`).
+#
 # Exit code: 0 clean, 1 if any violation found.
 
 set -u

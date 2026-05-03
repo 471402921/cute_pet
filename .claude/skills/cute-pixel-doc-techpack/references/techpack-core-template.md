@@ -1,8 +1,10 @@
 # Tech Pack 模板 — core 服务(前端基础设施)
 
 > 复制本文件到 `doc/design/core-{service}.md` 后填写。**前置条件**:对应 ADR **已存在**(无 ADR 不开 core 服务——任何引入新依赖、新跨切抽象、新生命周期模式的决策都得先有 ADR 锁住理由)。
+>
+> **链接基线说明**:本模板里指向 `../../../doc/X` / `../../../lib/X` 的参考链接是**给 Skill 维护者看的**(从 references/ 出发);cp 到 `doc/design/` 后,这些链接需要手动改成 `../X` / `../../lib/X`(从 doc/design/core-{service}.md 出发才对)。**§1 ADR 路径字段** `doc/decisions/ADR-NNN-{slug}.md` 是相对仓库根的内容占位,不要动。
 
-> 本模板对齐 [architecture.md](../../architecture.md) 的 `core/` 边界(基础设施零件,业务无关)。core 服务**不属于**任何 feature,跨模块共享单点。
+> 本模板对齐 [architecture.md](../../../doc/architecture.md) 的 `core/` 边界(基础设施零件,业务无关)。core 服务**不属于**任何 feature,跨模块共享单点。
 
 ---
 

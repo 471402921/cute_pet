@@ -81,7 +81,7 @@ cd -
 
 ### Step 3 — 内容替换(sed)
 
-每个文件做两次替换:
+每个文件做三次替换:
 
 ```bash
 # snake_case 的标识符(import 路径、part 指令、文件名引用)
@@ -89,12 +89,18 @@ find lib/features/{module} test/features/{module} -name "*.dart" -exec sed -i ''
 
 # PascalCase 的类名(Template → {Module}PascalCase,例如 PetProfile)
 find lib/features/{module} test/features/{module} -name "*.dart" -exec sed -i '' "s/Template/{ModulePascalCase}/g" {} \;
+
+# 删除模板顶部的 ⚠️ TEMPLATE 警告块(8 行,从 "// ⚠️ TEMPLATE" 起到下一个空行止)
+find lib/features/{module} test/features/{module} -name "*.dart" \
+  ! -name "*.freezed.dart" ! -name "*.g.dart" \
+  -exec sed -i '' '/^\/\/ ⚠️ TEMPLATE/,/^$/d' {} \;
 ```
 
 **注意**:
 - macOS `sed -i ''` 与 Linux `sed -i` 不同;按当前平台调整(开发机是 darwin)
 - 别动 `_template_models.freezed.dart` / `_template_models.g.dart`——这些会被 `make codegen` 重生成,先 sed 内容,然后 codegen 会覆盖产物
 - 替换后**人眼扫一遍** import 与类名,确保没误改框架字符串(`Template` 是常见词,grep 一下)
+- **第三条 sed 必须在前两条之后跑**:删警告块依赖 `// ⚠️ TEMPLATE` 这个标志行,前两条 sed 不会改全大写 `TEMPLATE`,所以标志稳定。模板原件保留警告(对 _template/ 编辑者它是真的:"你在改种子,不在改业务"),cp 出去的衍生模块由本步去掉
 
 ### Step 4 — 删掉用不到的文件 + 改 mock 数据
 

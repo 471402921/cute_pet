@@ -340,6 +340,6 @@ class PetController extends GetxController {
 | `lib/app/` 骨架(routes / theme / binding) | 复用骨架,routes 列表清空重填 |
 | `features/` | **完全清空,按新 app 业务重建** |
 | `assets/{namespace}/` | namespace 重命名(`pets` → 新 app 的实体) |
-| 三个 `cute-pixel-*` skill | 复用(skill 本身不绑业务) |
+| `cute-pixel-*` skill 套件 | 复用(skill 本身不绑业务,清单与门禁见 [.claude/skills/README.md](../.claude/skills/README.md)) |
 
 新 app 第一个动作:在 `doc/` 写自己的 `prd/` + `design/`,然后 `/cute-pixel-module-gen` 起第一个模块。

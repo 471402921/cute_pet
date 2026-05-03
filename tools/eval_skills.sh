@@ -127,6 +127,12 @@ if [ -d "$TEMPLATE_DIR" ]; then
   find "$TARGET_DIR" -type f -name '*.dart' \
     ! -name '*.freezed.dart' ! -name '*.g.dart' \
     -exec "${SED_INPLACE[@]}" "s/Template/$TARGET_PASCAL/g" {} \;
+  # 3rd sed (mirrors module-gen SKILL.md Step 3): strip the 8-line ⚠️ TEMPLATE
+  # warning header from the cp'd files. Marker line stays uppercase TEMPLATE
+  # (untouched by the two sed runs above), so this still finds it.
+  find "$TARGET_DIR" -type f -name '*.dart' \
+    ! -name '*.freezed.dart' ! -name '*.g.dart' \
+    -exec "${SED_INPLACE[@]}" '/^\/\/ ⚠️ TEMPLATE/,/^$/d' {} \;
 
   # Verify rule 4: every top-level .dart file matches {module}_*.dart.
   rule4_viol=0
@@ -143,18 +149,20 @@ if [ -d "$TEMPLATE_DIR" ]; then
   done
   [ "$rule4_viol" -eq 0 ] && ok "cp+sed flow: all top-level files match $TARGET_NAME""_*.dart"
 
-  # Verify no leftover _template / Template tokens in non-generated source.
+  # Verify no leftover _template / Template / TEMPLATE / ⚠️ tokens in non-generated source.
+  # Includes uppercase TEMPLATE and the ⚠️ warning marker, which are stripped
+  # by the 3rd sed (deletes the 8-line warning block from the cp'd module).
   leftover_files="$(
     find "$TARGET_DIR" -type f -name '*.dart' \
       ! -name '*.freezed.dart' ! -name '*.g.dart' \
-      -exec grep -lE '_template|Template' {} \; 2>/dev/null
+      -exec grep -lE '_template|Template|TEMPLATE|⚠️' {} \; 2>/dev/null
   )"
   if [ -n "$leftover_files" ]; then
     while IFS= read -r f; do
-      fail "cp+sed flow: leftover _template/Template token in $(basename "$f")"
+      fail "cp+sed flow: leftover _template/Template/TEMPLATE/⚠️ token in $(basename "$f")"
     done <<< "$leftover_files"
   else
-    ok "cp+sed flow: no leftover _template/Template tokens"
+    ok "cp+sed flow: no leftover _template/Template/TEMPLATE/⚠️ tokens"
   fi
 
   # Verify package import prefix preserved.

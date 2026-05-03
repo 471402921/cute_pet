@@ -41,7 +41,7 @@ for arg in "$@"; do
     NEW_NAME=*) NEW_NAME="${arg#NEW_NAME=}" ;;
     STRIP_PET=*) STRIP_PET="${arg#STRIP_PET=}" ;;
     -h|--help)
-      grep -E '^#( |$)' "$0" | sed 's/^# \{0,1\}//'
+      awk 'NR==1{next} /^set -eu/{exit} /^#/{sub(/^# ?/,""); print}' "$0"
       exit 0
       ;;
     *) echo "fork_rename: unknown arg '$arg'" >&2; exit 2 ;;
@@ -116,14 +116,22 @@ echo "  [4/7] ARB appTitle reset to TODO_${NEW_NAME}_app_title (fill in zh/en se
 # ---- Step 5: optionally strip features/pet/ --------------------------------
 if [ "$STRIP_PET" = "1" ]; then
   rm -rf lib/features/pet test/features/pet lib/shared/route_args/pet_route_args.dart
-  # Best-effort: clean route registration (won't catch every comment style).
+  # Best-effort sed: catches direct token references (AppRoutes.pet, PetBinding,
+  # PetPage) AND import lines pointing at features/pet/ (sed pattern won't
+  # match the symbol on the import line itself). Two passes keep things explicit.
   "${SED_INPLACE[@]}" '/AppRoutes\.pet/d;/PetBinding/d;/PetPage/d' \
     lib/app/app_routes.dart lib/app/app_pages.dart
+  "${SED_INPLACE[@]}" '/import.*features\/pet\//d' \
+    lib/app/app_pages.dart lib/app/app_routes.dart
   # Trim ARB pet* keys (zh + en together to keep check-arb-sync passing).
+  # Covers petTitle (no uppercase suffix), petAction* family (with uppercase),
+  # and the home → pet entry text key homeMeetThePet.
   for arb in lib/l10n/app_zh.arb lib/l10n/app_en.arb; do
-    "${SED_INPLACE[@]}" '/"pet[A-Z]/d;/"petTitle"/d' "$arb"
+    "${SED_INPLACE[@]}" '/"petTitle"/d;/"petAction[A-Z]/d;/"homeMeetThePet"/d' "$arb"
   done
   echo "  [5/7] Stripped features/pet/ + route registration + pet* ARB keys"
+  echo "        ⚠️  home_page.dart 里的 'Meet the pet' 按钮(跨多行 widget)未被自动改"
+  echo "            grep -n 'pet\\|Pet' lib/features/home/ 二次手动清理"
 else
   echo "  [5/7] Kept features/pet/ as reference (pass STRIP_PET=1 to remove)"
 fi

@@ -1,8 +1,10 @@
 # Tech Pack 模板(前端 / Module-First Flat)
 
 > 复制本文件到 `design/{NN}-{module}.md` 后填写。**前置条件**:对应 PRD-Lite 已**定稿**(状态 = 已定稿)。
+>
+> **链接基线说明**:本模板里指向 `../../../doc/X` 的文档参考链接是**给 Skill 维护者看的**(从 references/ 出发);cp 到 `doc/design/` 后,这些链接需要手动改成 `../X`(从 doc/design/{NN}.md 出发才对)。**§1 PRD 路径字段** `../prd/{NN}-{module}.md` 是产出文件的内容占位,不要动——它本来就是相对 doc/design/ 写的。
 
-> 本模板对齐 [architecture.md](../architecture.md) 的 Module-First Flat + [pixel-foundation.md](../pixel-foundation.md) 的 Flame 契约。前端 TechPack **不写**后端字段表/SQL/API 设计——那些归后端 TechPack。
+> 本模板对齐 [architecture.md](../../../doc/architecture.md) 的 Module-First Flat + [pixel-foundation.md](../../../doc/pixel-foundation.md) 的 Flame 契约。前端 TechPack **不写**后端字段表/SQL/API 设计——那些归后端 TechPack。
 
 ---
 

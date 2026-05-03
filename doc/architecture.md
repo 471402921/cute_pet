@@ -37,7 +37,7 @@ lib/
 │   └── utils/                     # 纯函数工具                                [planned]   (空目录占位)
 ├── shared/                        # 跨模块共享 UI / 模型
 │   ├── route_args/                # 路由参数类(跨模块契约,见下方说明)        [in-use]
-│   ├── state/                     # 跨模块响应式状态(Rx<T>)                  [planned]   (目录尚未创建)
+│   ├── state/                     # 跨模块响应式状态(ViewState<T> + 后续 Result<T>/PaginatedList<T>) [in-use]
 │   └── widgets/                   # 跨模块复用 widget(StateViewBuilder 等)   [in-use]
 ├── l10n/                          # 国际化资源(ARB 文件)                     [in-use]
 └── features/                      # 业务模块(每个模块按 Module-First Flat 组织)
