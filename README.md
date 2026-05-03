@@ -42,7 +42,8 @@ cute_pixel 把这些一次性约定好,新项目按 [doc/pixel-foundation.md](do
 ```bash
 make get                 # flutter pub get
 make codegen             # build_runner 生成 *.freezed.dart / *.g.dart
-make analyze             # check-arch + flutter analyze
+make analyze             # check-all + flutter analyze
+make check-all           # check-arch + check-assets + check-arb-sync(三守门)
 make test                # 跑全部测试
 make eval-skills         # 验证 cute-pixel-* skills 没漂出架构
 make run [DEVICE=<id>]   # flutter run
@@ -50,14 +51,21 @@ make run [DEVICE=<id>]   # flutter run
 
 ## Agent 协作
 
-仓库带 `cute-pixel-*` 系列 skill 在 `.claude/skills/`:
+仓库带 `cute-pixel-*` 系列 skill 在 `.claude/skills/`,**features 与 core 双轨流水线**:
 
-- `/cute-pixel-status` — 看当前项目什么状态
-- `/cute-pixel-module-gen` — 起个新业务模块(`cp lib/features/_template/` + sed)
-- `/cute-pixel-review` — 架构与可读性审核(只报告,不改)
-- `/cute-pixel-test-gen` — 按 conventions §7 四层金字塔补测试
+```
+features:  /cute-pixel-doc-prd → /cute-pixel-doc-techpack → /cute-pixel-module-gen → /cute-pixel-test-gen
+core 服务: ADR(doc/decisions/) → /cute-pixel-doc-techpack core/X → 手工实装 → /cute-pixel-review core/X
+```
 
-每个 skill 启动时**重新读** architecture/conventions/CLAUDE.md,规范变了改文档就够,skill 不动。
+- `/cute-pixel-status` — 看当前项目什么状态(读 `lib/_manifest.yaml`)
+- `/cute-pixel-doc-prd` — 写 PRD-Lite(8 节,含 Figma 链接槽)
+- `/cute-pixel-doc-techpack` — 写 TechPack;features 模式门禁 PRD 定稿,core 模式门禁 ADR 存在
+- `/cute-pixel-module-gen` — 起新业务模块(`cp lib/features/_template/` + sed)
+- `/cute-pixel-test-gen` — 按 conventions §7 四层金字塔 + PRD §7 AC 写测试
+- `/cute-pixel-review` — 架构与可读性审核(任意路径,只报告)
+
+每个 skill 启动时**重新读** architecture/conventions/CLAUDE.md,规范变了改文档就够,skill 不动。详细决策见 [doc/decisions/ADR-009](doc/decisions/ADR-009-spec-driven-with-strong-gates.md)。
 
 ## Fork 出新像素 app 的快路径
 
