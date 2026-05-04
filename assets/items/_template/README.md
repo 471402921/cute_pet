@@ -1,5 +1,11 @@
 # `assets/items/_template/` — 道具图标目录脚手架(骨架,非真道具)
 
+> 🚨 **DEPRECATED — pixellab 决议后未重做**
+>
+> 本模板预先于 [asset-lab-plan.md](../../../asset-lab-plan.md) 决定写出,schema 跟 pixellab.ai 导出格式不一致(详见 plan §3 资源类型矩阵)。
+> **请勿基于本模板新增 item**;cute-pixel-module-gen 等 skill 也不应读取本目录的 schema。
+> 等首个 pixellab 导出 item 真要进 cute_pet 时,本模板按真实 pixellab 结构重建,届时删除本警告。
+
 > ⚠️ 这是 cute_pixel **道具/物品类**资源的目录模板。**不是**真道具,**不要**在 pubspec.yaml 启用。要起新道具时从这里 cp 改名。
 >
 > 道具类型例:食物、玩具、装备、收藏品、货币图标。需要复杂动画时(如稀有道具旋转特效)走 [`assets/sprites/_template/`](../../sprites/_template/) 反而更合适。

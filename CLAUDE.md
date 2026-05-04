@@ -89,17 +89,21 @@ features/{module}/
 
 ```
 assets/
-├── sprites/  # 角色/生物 sprite(含 manifest.json)
-├── items/    # 道具图标(含 manifest.json)
+├── sprites/  # 角色/生物 sprite
+├── items/    # 道具图标
 ├── ui/       # buttons/ icons/ frames/
 ├── scenes/   # 背景/视差层
-├── effects/  # 特效动画(含 manifest.json)
+├── effects/  # 特效动画
 ├── tilemaps/ # Tiled 地图(需 flame_tiled)
 ├── audio/    # sfx/ music/(需 audioplayers/flame_audio)
 └── fonts/    # 像素字体(BMFont 或 TTF)
 ```
 
-起新资源 = `cp -r assets/{type}/_template assets/{type}/{namespace}/{id}/` → 改 manifest(若有) → pubspec.yaml 启用 namespace。导航见 [assets/README.md](assets/README.md),完整契约见 [doc/pixel-foundation.md "Asset 资源约定"](doc/pixel-foundation.md#asset-资源约定)。**不**按业务模块切分(`assets/pet_module/` 是反的——asset 跨模块共享)。
+**Asset 管线已锁定**: 资源由 [pixellab.ai](https://www.pixellab.ai/) 生成 → asset-lab(独立 repo,见 [asset-lab-plan.md](asset-lab-plan.md))做预览/场景编排 → git 版本管理 → cute_pet 消费。决议见 [ADR-010](doc/decisions/ADR-010-pixellab-as-asset-pipeline.md);完整契约见 [doc/pixel-foundation.md "Asset 管线"](doc/pixel-foundation.md#asset-管线pixellab--asset-lab--cute_pet) 一节。
+
+> 🚨 **现 sprites/items/effects 三个 _template/manifest.json 已 DEPRECATED** —— 它们的 schema 是 pixellab 决定**之前**写的,跟 pixellab 实际导出格式不一致。**禁止**基于它们新增 sprite/loader/binding 代码。真重做与"首个 pixellab 资源进 cute_pet"是同一原子动作,触发后一并清理(详见 [pixel-foundation.md "Asset 管线"](doc/pixel-foundation.md#asset-管线pixellab--asset-lab--cute_pet))。
+
+`assets/` 顶层导航见 [assets/README.md](assets/README.md)。**不**按业务模块切分(`assets/pet_module/` 是反的——asset 跨模块共享)。
 
 ## 可用 Skills(项目本地 `.claude/skills/`)
 

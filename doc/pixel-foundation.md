@@ -4,19 +4,20 @@
 
 > 状态标记 `planned | scaffolded | in-use` 的含义见 [architecture.md "状态标记说明"](architecture.md#状态标记说明)。
 
-## Status snapshot(本文涵盖 6 节,各节落地度速查)
+## Status snapshot(本文涵盖 7 节,各节落地度速查)
 
 | 节 | Status | 说明 |
 |---|---|---|
 | [Flame 的位置](#flame-的位置) | **in-use** | features/pet/ 是首位用户,契约稳定可参照 |
 | [Controller ↔ Flame Game 同步契约](#controller--flame-game-同步契约) | **in-use** | 同上,见 [pet_game.dart](../lib/features/pet/pet_game.dart) |
-| [Asset 资源约定](#asset-资源约定) | **scaffolded** | 8 类目录骨架已立(见 [assets/](../assets/));真 sprite/PNG 待接入 |
+| [Asset 管线(pixellab → asset-lab → cute_pet)](#asset-管线pixellab--asset-lab--cute_pet) | **decided** | 决议见 [ADR-010](decisions/ADR-010-pixellab-as-asset-pipeline.md);asset-lab repo 待立;cute_pet 通用 loader defer |
+| [Asset 资源约定](#asset-资源约定) | **DEPRECATED** | 旧 schema 与 pixellab 不一致;**冻结**直到首个 pixellab 资源进 cute_pet 时一并重做 |
 | [渲染器选择(Web)](#渲染器选择web) | **planned** | web 平台未启用,接 web 时落 |
 | [像素纯度自检](#像素纯度自检) | **planned** | pet 模块当前是占位渲染(色块);**接真 sprite 第一刻必须落本节** |
 | [输入抽象](#输入抽象) | **planned** | core/input/ 不存在;mobile-only 阶段不阻塞,加 web/keyboard 时落 |
 | [资源懒加载](#资源懒加载) | **planned** | 当前 sprite < 1MB,bundle 直加载够用;asset 总量过 5MB 时启动落地 |
 
-**何时回看本文档**:接真 sprite 前必读 §像素纯度;启用 web 前必读 §渲染器选择 + §输入抽象;asset 总量上来必读 §资源懒加载。Flame + Asset 两节随时可读(已落地)。
+**何时回看本文档**:任何时候碰 sprite/items/effects 资源前必读 §Asset 管线;接真 sprite 前必读 §像素纯度;启用 web 前必读 §渲染器选择 + §输入抽象;asset 总量上来必读 §资源懒加载。Flame 节随时可读(已落地)。
 
 ## 目标与适用范围
 
@@ -81,7 +82,52 @@ features/pet/
 
 参考实现见 [lib/features/pet/pet_game.dart](../lib/features/pet/pet_game.dart)。
 
+## Asset 管线(pixellab → asset-lab → cute_pet)
+
+> 决议见 [ADR-010](decisions/ADR-010-pixellab-as-asset-pipeline.md);完整方案见 [../asset-lab-plan.md](../asset-lab-plan.md)。
+> 本节是当前 canonical 管线;下一节"Asset 资源约定"是 pixellab 决定**之前**的旧 schema,已 DEPRECATED。
+
+cute_pixel 的 asset 不在仓内"造",而是从外部管线流入:
+
+```
+[pixellab.ai]  →  [asset-lab repo]  →  [git]  →  [cute_pet repo]
+ AI 生成零件      多图交互预览           版本    运行时消费
+                  场景编排
+```
+
+### 三段职责
+
+| 角色 | 做什么 | 不做什么 |
+|---|---|---|
+| **pixellab.ai** | AI 生成 sprite/items/maps/tilesets,导出 `metadata.json` + pngs | 场景编排、跨资源预览、资源库 |
+| **asset-lab**(独立 repo) | 键盘交互预览(切方向/动画)、多资源同屏、声明式场景 `scenes/{level}.json` | AI 生成、定义自有 sprite schema |
+| **cute_pet**(本仓) | 运行时消费 `metadata.json` + 可选 `game_meta.json` sidecar | 复刻生成 / 复刻预览 |
+
+### cute_pet 这边的契约(锁定)
+
+- **sprite/items/effects 等"长什么样"的元数据** → 严格跟随 **pixellab `metadata.json`**。**不发明** schema
+- **"游戏怎么用"的元数据**(锚点 / 动画 fps / 碰撞框 / 事件触发)→ 未来的 **`game_meta.json` sidecar**,放在 sprite 目录里跟 `metadata.json` 同级。**字段细节延后定**(等首个 sprite 真要进 cute_pet 时再敲)
+- **通用 sprite loader** → **defer**(YAGNI;等 asset-lab 把契约打磨稳再写,避免重写)
+
+### "首个 pixellab 资源进 cute_pet"是一个原子触发事件
+
+到那一刻要做的事(同一波动作,不要拆开):
+
+1. 删除现 [assets/{sprites,items,effects}/_template/](../assets/sprites/_template/) 内容,按真 pixellab 结构重建模板
+2. 重写下一节 "Asset 资源约定" 为 pixellab metadata.json schema + game_meta.json sidecar 字段说明
+3. 删除三个 _template/README.md 顶部和下一节顶部的 DEPRECATED 警告
+4. 实装通用 sprite loader(`lib/core/sprite/sprite_loader.dart` 或 `lib/features/{module}/{module}_animation_loader.dart`,具体位置届时定)
+5. 写 ADR(或并入"通用 sprite loader" TechPack)记录 game_meta.json 字段决策
+
+在此之前,**不**要因为"路过看到 _template 不顺眼"就单独动其中任何一项。
+
 ## Asset 资源约定
+
+> 🚨 **本节 schema DEPRECATED — pixellab 决议后未重做**
+>
+> 本节描述的 manifest.json schema(`species/actions/{frameCount,stepTime,directional}`、4 方向、sprite sheet 横铺、`{action}_{direction}.png` 命名)预先于 [../asset-lab-plan.md](../asset-lab-plan.md) 决定写出,**与 pixellab.ai 实际导出格式不一致**(metadata.json + 8 方向 + frame-per-file + 字段名全不同)。
+> 等首个 pixellab 导出 sprite 真要进 cute_pet 时,本节按真实 pixellab + game_meta sidecar 结构重写,届时删除本警告。
+> **写新代码时不要基于本节 schema 实装 sprite loader**;通用 loader 设计 defer 到 asset-lab 把契约打磨完再做。
 
 像素 app 的资源不只是 sprite——还有道具图标、UI 按钮/图标/9-slice 边框、场景背景、特效、瓦片地图、音频、字体。cute_pixel 的 `assets/` 按**类型**而非业务模块组织,让跨模块共享自然发生。
 

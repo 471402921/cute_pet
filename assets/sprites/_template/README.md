@@ -1,5 +1,11 @@
 # `assets/sprites/_template/` — 角色 sprite 目录脚手架(骨架,非真物种)
 
+> 🚨 **DEPRECATED — pixellab 决议后未重做**
+>
+> 本模板预先于 [asset-lab-plan.md](../../../asset-lab-plan.md) 决定写出,schema / 目录结构 / PNG 命名都跟 pixellab.ai 导出格式不一致(4 方向 vs 8 方向、sprite sheet vs frame-per-file、字段名全不同)。
+> **请勿基于本模板新增 sprite**;cute-pixel-module-gen 等 skill 也不应读取本目录的 schema。
+> 等首个 pixellab 导出 sprite 真要进 cute_pet 时,本模板按真实 pixellab 结构重建,届时删除本警告。
+
 > ⚠️ 这是 cute_pixel **角色/生物类** sprite 资源的目录模板。**不是**真物种,**不要**在 pubspec.yaml 启用进 bundle。要接真 sprite 时,从这里 cp 出去改名。
 >
 > 道具图标走 [`assets/items/_template/`](../../items/_template/),UI 元素走 [`assets/ui/`](../../ui/),特效走 [`assets/effects/_template/`](../../effects/_template/)。

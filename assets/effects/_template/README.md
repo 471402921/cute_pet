@@ -1,5 +1,11 @@
 # `assets/effects/_template/` — 特效动画目录脚手架(骨架,非真特效)
 
+> 🚨 **DEPRECATED — pixellab 决议后未重做**
+>
+> 本模板预先于 [asset-lab-plan.md](../../../asset-lab-plan.md) 决定写出,schema(sprite sheet + frameCount/stepTime)跟 pixellab.ai 导出格式(frame-per-file)不一致。
+> **请勿基于本模板新增 effect**;cute-pixel-module-gen 等 skill 也不应读取本目录的 schema。
+> 等首个 pixellab 导出 effect 真要进 cute_pet 时,本模板按真实 pixellab 结构重建,届时删除本警告。
+
 > ⚠️ cute_pixel **特效**资源模板(粒子帧动画、过渡效果、技能光效等)。**不是**真特效,**不要**在 pubspec.yaml 启用。
 
 ## 起新特效的步骤
