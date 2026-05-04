@@ -2,7 +2,7 @@
 id: ADR-002
 title: Flame 仅限游戏化模块,不外溢
 date: 2026-05-03
-status: Accepted
+status: Superseded by ADR-011
 ---
 
 ## Context

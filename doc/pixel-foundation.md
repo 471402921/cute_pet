@@ -12,6 +12,7 @@
 | [Controller ↔ Flame Game 同步契约](#controller--flame-game-同步契约) | **in-use** | 同上,见 [pet_game.dart](../lib/features/pet/pet_game.dart) |
 | [Asset 管线(pixellab → asset-lab → cute_pet)](#asset-管线pixellab--asset-lab--cute_pet) | **decided** | 决议见 [ADR-010](decisions/ADR-010-pixellab-as-asset-pipeline.md);asset-lab repo 待立;cute_pet 通用 loader defer |
 | [Asset 资源约定](#asset-资源约定) | **DEPRECATED** | 旧 schema 与 pixellab 不一致;**冻结**直到首个 pixellab 资源进 cute_pet 时一并重做 |
+| [Level 系统](#level-系统) | **planned** | 决议见 [ADR-011](decisions/ADR-011-level-system-and-flame-scope-expansion.md);core/level/ 与 assets/levels/ 槽位 deferred 到首个 yard level 进 cute_pet 时一并建 |
 | [渲染器选择(Web)](#渲染器选择web) | **planned** | web 平台未启用,接 web 时落 |
 | [像素纯度自检](#像素纯度自检) | **planned** | pet 模块当前是占位渲染(色块);**接真 sprite 第一刻必须落本节** |
 | [输入抽象](#输入抽象) | **planned** | core/input/ 不存在;mobile-only 阶段不阻塞,加 web/keyboard 时落 |
@@ -101,7 +102,7 @@ cute_pixel 的 asset 不在仓内"造",而是从外部管线流入:
 |---|---|---|
 | **pixellab.ai** | AI 生成 sprite/items/maps/tilesets,导出 `metadata.json` + pngs | 场景编排、跨资源预览、资源库 |
 | **asset-lab**(独立 repo) | 键盘交互预览(切方向/动画)、多资源同屏、声明式场景 `scenes/{level}.json` | AI 生成、定义自有 sprite schema |
-| **cute_pet**(本仓) | 运行时消费 `metadata.json` + 可选 `game_meta.json` sidecar | 复刻生成 / 复刻预览 |
+| **cute_pet**(本仓) | 运行时消费 `metadata.json` + 可选 `game_meta.json` sidecar;消费 `assets/levels/*.json`(LevelSpec,schema deferred,见 §Level 系统) | 复刻生成 / 复刻预览 |
 
 ### cute_pet 这边的契约(锁定)
 
@@ -224,6 +225,57 @@ assets/sprites/{namespace}/{species}/
 - **不**按业务模块切分(`assets/pet_module/` 是反的——asset 跨模块共享)
 - **不**在资源目录写业务逻辑(逻辑归 `lib/features/{module}/{module}_animation_loader.dart` 等)
 - **不**在 `assets/` 根放散落 PNG——必须先选类型目录
+
+## Level 系统
+
+> 决议见 [ADR-011](decisions/ADR-011-level-system-and-flame-scope-expansion.md)。
+>
+> 🚨 **本节 LevelSpec 字段全 deferred** — 槽位仅声明命名空间,真字段在首个 yard level 进 cute_pet 时通过 `/cute-pixel-doc-techpack core/level` TechPack 定。**不要基于本节当前内容实装 LevelLoader / LevelWorld**。
+
+关卡(level)= map + 多 entity 的声明式组合。cute_pet 端契约是 **LevelSpec**(存放在 `assets/levels/*.json`),`core/level/` 服务消费 LevelSpec → 实例化 entity → 接入 Flame 渲染/碰撞/触发。asset-lab 是上游编排工具(产 LevelSpec),cute_pet 是消费方;**消费契约定义权在 cute_pet**(asset-lab 跟着导出),不被工具的内部预览 schema 牵着走。
+
+### 实体词汇(命名空间已锁,字段 deferred)
+
+- `map` — 地图背景 + 瓦片
+- `sprite` — 静态/动画精灵
+- `collider` — 碰撞体积(rect/circle/polygon,字段 deferred)
+- `trigger` — 触发器(zone + event,字段 deferred)
+- `interactable` — 可交互实体(tap → controller 事件,字段 deferred)
+
+新增 entity 类型 = 在词汇表加一项 + 对应 feature 在 binding 注册 factory(见下)。
+
+### Entity registry(compile-time + binding-time register)
+
+```dart
+// core/level/level_world.dart  [planned]
+typedef EntityFactory = Component Function(EntitySpec spec);
+
+class LevelWorld extends FlameGame {
+  final Map<String, EntityFactory> _registry = {};
+  void register(String type, EntityFactory factory) => _registry[type] = factory;
+}
+
+// features/{module}/{module}_binding.dart  [接 level 时加一行]
+Get.find<LevelWorld>().register('interactable:pet', PetComponent.fromSpec);
+```
+
+加新 entity 类型 → **core/level/ 代码不动**(Open/Closed)。当前只 pet 一个 register,不引入声明式 manifest 那层抽象(YAGNI);等 5+ feature 注册时再升 manifest 不迟。
+
+### "首个 yard level 进 cute_pet"是一个原子触发事件
+
+到那一刻要做的事(同一波动作,不要拆开,同 §Asset 管线 范式):
+
+1. 在本节展开 LevelSpec 完整 schema(替换 deferred 警告),通过 `/cute-pixel-doc-techpack core/level` TechPack 定字段
+2. 实装 `lib/core/level/`(LevelLoader + LevelWorld + EntitySpec 模型 + 5 类 entity 基础 factory)
+3. 建 `assets/levels/` 目录 + 第一个 `assets/levels/yard_001.json`
+4. features/pet/pet_binding.dart 加 `LevelWorld.register('interactable:pet', ...)` 一行
+5. ADR-002 → ADR-011 supersede 链路落到代码(Flame 首次在 `core/level/` 出现是合规事件)
+
+在此之前,**不**要因为"路过想试一下"就单独动其中任何一项。
+
+### 当前实现状态
+
+`planned` — `lib/core/level/` 不存在,`assets/levels/` 不存在,LevelSpec schema 未定。本节是契约槽位,不是实装。
 
 ## 渲染器选择(Web)
 
