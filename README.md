@@ -80,3 +80,7 @@ bash tools/fork_rename.sh NEW_NAME=tomato_garden STRIP_PET=1
 第一次 fork 跑下来踩到的新坑,反向 PR 回 `tools/fork_rename.sh`——这个脚本本身就是 fork 经验的存活点。
 
 剩下就靠 [doc/pixel-foundation.md](doc/pixel-foundation.md) + 4 条铁律 + `make analyze` 一路兜住。
+
+## License
+
+Apache License 2.0 — 见 [LICENSE](LICENSE)。
