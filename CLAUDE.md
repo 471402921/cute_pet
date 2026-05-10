@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+> ⚠️ **本仓库已进入归档过渡期**。cute_pixel 已演进到 React Native + Godot 新底座,新底座设计文档见 [`cute_pixel_plan/`](cute_pixel_plan/)。**本仓库不再开发新功能**——新需求请到新仓库写。本文件下方的 Flutter + GetX + Flame 时代指引仍对 Agent 维护历史代码有效。
+
+---
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 本文件给 Claude Code(claude.ai/code)在 cute_pixel 仓库工作时提供入口指引。

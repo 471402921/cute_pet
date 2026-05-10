@@ -1,5 +1,9 @@
 # cute_pixel
 
+> ⚠️ **本仓库已进入归档过渡期**。cute_pixel 已演进到 React Native + Godot 新底座。新底座设计文档见 [`cute_pixel_plan/`](cute_pixel_plan/),新仓库待建(链接 TBD)。本仓库 Flutter + GetX + Flame 阶段的代码与文档保留作历史参考,**不再开发新功能**。
+
+---
+
 像素风(pixel-art)移动端应用的 **Flutter + GetX + Flame 通用底座**。一份骨架,可以 fork 出多个像素风 app(养宠物、种菜、养鱼、小镇 demo……)。
 
 仓库内置 **cute_pet**([lib/features/pet/](lib/features/pet/))作为首个 demo app。
